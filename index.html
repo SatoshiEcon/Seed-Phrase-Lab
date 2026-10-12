@@ -166,10 +166,25 @@
     <div class="status" id="hexStatus"></div>
   </section>
 
-  <section>
+    <section>
     <h2><span class="step">Step 3</span>Work out your words</h2>
     <div class="why"><strong>What's happening:</strong> 11 bits can make 2<sup>11</sup> = 2048 different numbers, from 0 to 2047, and the BIP-39 word list has exactly 2048 words. So each group of 11 bits picks one word. Reading a group of bits as a number works like reading a regular number, only each place is worth double the one to its right instead of ten times: 1, 2, 4, 8 … 1024. The words don't add anything new. They're just an easier way for people to write down and read back the same 264 bits without mistakes.</div>
-    <p class="small"><strong>Your job, for each row:</strong> add up the place values that have a 1 under them. That's <strong>M</strong>; type it in. The word list starts at line 1, but the numbers start at 0, so add 1 to get <strong>N</strong>. Find line N in the BIP-39 word list and type that word. The page tells you if each answer is right, and keeps track of wrong tries.</p>
+    <div class="small" style="margin:8px 0 12px">
+      <p style="margin:0 0 6px"><strong>Your job, for each row:</strong> turn the row's 11 bits into a number, then find its word. Three steps:</p>
+      <ol style="margin:0 0 10px 20px;padding:0">
+        <li style="margin-bottom:6px"><strong>Find M.</strong> Every column has a number at the top: 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1. Go across the row. Wherever the bit is a <strong>1</strong>, write down the number at the top of that column. Wherever it is a <strong>0</strong>, skip it. Add up what you wrote down. That total is <strong>M</strong>. Type it in the "Your M" box.</li>
+        <li style="margin-bottom:6px"><strong>Find N.</strong> Add 1 to M. The numbers start at 0, but the word list starts at line 1, so <strong>N = M + 1</strong>.</li>
+        <li><strong>Find the word.</strong> Look up line N in the word list and type that word in the "Your word" box.</li>
+      </ol>
+      <p style="margin:0 0 4px"><strong>Example:</strong> a row with the bits 0 0 1 0 1 1 1 0 1 0 0</p>
+      <div class="scroll"><table class="grid" style="margin:4px 0 6px">
+        <tr><th>Column</th><th>1024</th><th>512</th><th>256</th><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr>
+        <tr><td class="info"><strong>Bit</strong></td><td class="v">0</td><td class="v">0</td><td class="v one">1</td><td class="v">0</td><td class="v one">1</td><td class="v one">1</td><td class="v one">1</td><td class="v">0</td><td class="v one">1</td><td class="v">0</td><td class="v">0</td></tr>
+        <tr><td class="info"><strong>Counts?</strong></td><td>–</td><td>–</td><td><strong>256</strong></td><td>–</td><td><strong>64</strong></td><td><strong>32</strong></td><td><strong>16</strong></td><td>–</td><td><strong>4</strong></td><td>–</td><td>–</td></tr>
+      </table></div>
+      <p style="margin:0 0 4px">M = 256 + 64 + 32 + 16 + 4 = <strong>372</strong> &nbsp;→&nbsp; N = 372 + 1 = <strong>373</strong> &nbsp;→&nbsp; line 373 of the word list is <strong>company</strong>.</p>
+      <p class="note" style="margin:0">Check yourself: all 0s gives M = 0 (line 1, "abandon"). All 1s gives M = 2047 (line 2048, "zoo"). M can never be more than 2047.</p>
+    </div>
     <p class="small">The word list: <a href="https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt" target="_blank" rel="noopener">official BIP-39 English list on GitHub</a> (the line numbers on the left are N), or open the copy below.</p>
     <details class="wl"><summary>Show the word list here (line N = word)</summary><div id="wordList" class="wlgrid"></div></details>
     <div class="scroll"><table class="grid" id="wordGrid"></table></div>
