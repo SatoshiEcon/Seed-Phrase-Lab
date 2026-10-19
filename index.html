@@ -111,12 +111,13 @@
     <p class="small"><strong>This is a learning exercise only.</strong> The seed phrase you make here is <strong>not</strong> for holding (self-custody of) real bitcoin. This page runs in a web browser on a computer that is connected to the internet, and anything typed on an online computer could be seen by malware or other software.</p>
     <p class="small">Real keys can be made completely offline: on a computer that has never been connected to the internet, or entirely by hand with dice or coins, pencil, paper and the same math you'll do here.</p>
     <p class="small">The point of this exercise is to walk you through, step by step, <strong>what a hardware wallet or wallet software does inside</strong> when it creates your keys. A wallet does all of this in a fraction of a second. Here you do it slowly enough to see every step: randomness → bits → checksum → numbers → words → seed.</p>
+    <p class="small"><strong>What this exercise covers:</strong> the BIP-39 standard, from randomness to your 24 words and the 512-bit seed. It stops there. It does <strong>not</strong> make the BIP-32 master key, the child keys, or any Bitcoin addresses. A wallet does those steps next.</p>
   </section>
 
   <section class="warn" role="note" aria-label="Warning">
     <h2>⚠ Read this first</h2>
     <ul>
-      <li><strong>Never share your 24 words.</strong> Anyone who has your words owns the bitcoin, with no way to get it back. No real company, wallet, exchange or support person will ever ask for them.</li>
+      <li><strong>Never share your 24 words.</strong> Anyone who has your words owns the bitcoin, with no way to get it back. (If the wallet also uses a passphrase, the words alone aren't enough, but never count on a passphrase to protect leaked words.) No real company, wallet, exchange or support person will ever ask for them.</li>
       <li><strong>Use real dice or a real coin. Don't make up your bits.</strong> People are bad at being random. Bits you pick in your head, patterns (like 0101…), or all 0s or all 1s make words that thieves can guess. Thieves run programs that constantly check weak, guessable keys and empty any bitcoin they find.</li>
     </ul>
     <p class="note" id="listStatus" style="margin:10px 0 0">Checking the word list…</p>
@@ -124,7 +125,7 @@
 
   <section>
     <h2><span class="step">Step 1</span>Roll dice or flip a coin, and type your bits</h2>
-    <div class="why"><strong>What's happening:</strong> every Bitcoin key starts as a big random number. A wallet gets its randomness from a hardware random number generator inside its chip; you'll get yours from dice or a coin, which you can see. Each bit is a coin-flip choice (0 or 1), and 256 of them give 2<sup>256</sup> possible keys, a 78-digit number, close to the estimated number of atoms in the observable universe. That's why nobody can guess a truly random key, and why made-up or patterned bits are dangerous.</div>
+    <div class="why"><strong>What's happening:</strong> every Bitcoin wallet starts as one big random number. (All of the wallet's keys are later worked out from it, step by step, with no more randomness added.) A wallet gets its randomness from a hardware random number generator inside its chip; you'll get yours from dice or a coin, which you can see. Each bit is a coin-flip choice (0 or 1), and 256 of them give 2<sup>256</sup> possible keys, a 78-digit number, close to the estimated number of atoms in the observable universe. That's why nobody can guess a truly random key, and why made-up or patterned bits are dangerous.</div>
     <p class="small">Use whichever you have. Each roll or flip gives you one bit.</p>
     <ul class="small" style="margin:4px 0 8px 20px;padding:0">
       <li><strong>Dice:</strong> roll several at once and read them left to right: <strong>1, 2 or 3 = 0</strong> &nbsp;·&nbsp; <strong>4, 5 or 6 = 1</strong>.</li>
@@ -202,8 +203,9 @@
     <div class="locked" id="seedLocked">🔒 Locked. This step opens when your checksum and all 24 words are right.</div>
     <div class="hidden" id="seedBody">
       <div class="seedtext small">
-        <p><strong>Your 24 words are not the seed.</strong> They're a human-friendly way of writing down your entropy, the 256 random bits you made with your dice or coin.</p>
-        <p>To build the real seed, your wallet takes those 24 words, plus an optional passphrase, and runs them through a function called <strong>PBKDF2</strong> with <strong>HMAC-SHA512</strong>, <strong>2,048 times in a row</strong>. That stretching is deliberate. It makes guessing attacks slow and expensive. The result is the 512-bit number below, the <strong>BIP-39 seed</strong>.</p>
+        <p><strong>Your 24 words are not the seed.</strong> They're a human-friendly way of writing down 264 bits: your 256 random bits from the dice or coin, plus the 8-bit checksum.</p>
+        <p>To build the real seed, your wallet takes those 24 words, plus an optional passphrase, and runs them through a function called <strong>PBKDF2</strong>. PBKDF2 runs <strong>HMAC-SHA512</strong> 2,048 times in a chain, each round feeding the next, and combines all 2,048 results (it XORs them together) into one answer. The result is the 512-bit number below, the <strong>BIP-39 seed</strong>.</p>
+        <p>That stretching is deliberate: it makes each guess 2,048 times slower for an attacker. But stretching is <strong>not</strong> randomness. It can't rescue weak or made-up bits. A patterned or guessable phrase is still found quickly, just a little more slowly. Your security comes from your 256 real dice or coin bits.</p>
       </div>
       <p class="small" style="margin:12px 0 4px"><strong>Your BIP-39 seed</strong> (128 hex characters = 512 bits):</p>
       <div class="seed" id="seedOut"></div>
@@ -222,12 +224,12 @@
 
   <section>
     <h2><span class="step">Step 5</span>Hand it in</h2>
-    <p class="small">Download your work as an Excel file. It opens in Excel or Numbers.</p>
+    <p class="small">Download your work as an Excel file. It opens in Excel or Numbers. The file includes your bits, words and seed, so anyone you send it to can see this exercise wallet. That's fine for a practice wallet, and it's one more reason never to use it for real bitcoin.</p>
     <div class="row"><button class="primary" id="download">Download my work (Excel)</button><span class="note" id="dlNote"></span></div>
   </section>
 
   <footer class="note">
-    <p>Everything happens inside this page. Nothing you type is saved or sent anywhere, and once loaded it works without internet.</p>
+    <p>All the math happens inside this page, in your browser. The page sends nothing over the internet, and once loaded it works offline. The only thing it saves is the Excel file you choose to download, and that file <strong>does</strong> contain your bits, words and seed, so whoever receives it can see them.</p>
     <p><strong>Free and open-source software</strong>, MIT License. Built on the BIP-39 standard and its official English word list (github.com/bitcoin/bips, bip-0039). </p>
   </footer>
 </main>
@@ -763,7 +765,8 @@ function buildXlsx() {
   const B = v => ({ v, b: true });
   const now = new Date();
   const summary = [
-    [B(COURSE.title)], [],
+    [B(COURSE.title)],
+    [B("WARNING: this file contains this exercise's bits, checksum, 24 words and seed. Anyone who receives it can rebuild the exercise wallet. Treat it as public and NEVER put bitcoin in it.")], [],
     [B("Student"), name || "(no name entered)"],
     [B("Department"), $("dept").value.trim()],
     [B("University"), $("univ").value.trim()],
@@ -771,7 +774,7 @@ function buildXlsx() {
     [B("Instructor"), $("instructor").value.trim()],
     [B("Date"), $("duedate").value.trim()],
     [B("Downloaded"), now.toLocaleString()],
-    [B("How the hash was found"), hashShown ? "This page's built-in SHA-256 (Way B)" : "Terminal (Way A)"],
+    [B("Built-in hash button (Way B) used?"), hashShown ? "Yes" : "No (method not recorded: Terminal or another tool)"],
     [B("Bits entered"), `${s.filled} of 256`],
     [B("Checksum typed"), s.typed || "(none)"],
     [B("Checksum correct?"), !s.complete ? "Not finished" : (s.correct ? "YES" : "NO")],
@@ -794,7 +797,7 @@ function buildXlsx() {
     [B("Step 2: the checksum")], [],
     [B("256 bits as one string"), s.complete ? s.str : "(not finished)"],
     [B("Terminal command"), s.complete ? `echo ${s.str} | shasum -a 256 -0` : "(not finished)"],
-    [B("Hash found with"), hashShown ? "This page's built-in SHA-256 (Way B)" : "Terminal (Way A)"],
+    [B("Built-in hash button (Way B) used?"), hashShown ? "Yes" : "No (method not recorded: Terminal or another tool)"],
     [B("First two characters typed"), s.typed || "(none)"],
     [B("1st character as 4 bits"), s.typedOk ? `${s.typed[0]} -> ${s.cs8.slice(0, 4)}` : ""],
     [B("2nd character as 4 bits"), s.typedOk ? `${s.typed[1]} -> ${s.cs8.slice(4)}` : ""],
