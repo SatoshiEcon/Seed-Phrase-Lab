@@ -82,6 +82,10 @@
   details.wl summary { cursor: pointer; font-size: .9rem; }
   .wlgrid { columns: 160px; column-gap: 16px; font: .82rem/1.55 ui-monospace, Menlo, monospace; max-height: 420px; overflow-y: auto; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; margin-top: 6px; }
   .wlgrid span { color: var(--muted); display: inline-block; min-width: 3.4em; }
+  .locked { border: 2px dashed var(--line); border-radius: 8px; padding: 14px; text-align: center; color: var(--muted); }
+  .seed { border: 2px solid var(--good); border-radius: 8px; padding: 12px 14px; background: var(--word); word-break: break-all; font: 700 1rem/1.6 ui-monospace, Menlo, monospace; }
+  .seedtext p { margin: 8px 0; }
+  input.pass { width: min(420px, 100%); min-width: 0; }
   .hidden { display: none !important; }
 </style>
 </head>
@@ -100,13 +104,13 @@
     <p class="note" style="text-align:center;margin:10px 0 0">Type your name on the first line. The title block follows APA 7th edition and goes on the first page of the file you hand in.</p>
   </header>
 
-  <p class="sub">Roll dice or flip a coin, turn the results into 256 bits, find the checksum, then work out each of your 24 words yourself. The page checks your answers as you go. At the end, download your work as an Excel file and hand it in.</p>
+  <p class="sub">Roll dice or flip a coin, turn the results into 256 bits, find the checksum, then work out each of your 24 words yourself. The page checks your answers as you go. Get all 24 right and you unlock your actual seed. At the end, download your work as an Excel file and hand it in.</p>
 
   <section class="about">
     <h2>About this exercise</h2>
     <p class="small"><strong>This is a learning exercise only.</strong> The seed phrase you make here is <strong>not</strong> for holding (self-custody of) real bitcoin. This page runs in a web browser on a computer that is connected to the internet, and anything typed on an online computer could be seen by malware or other software.</p>
     <p class="small">Real keys can be made completely offline: on a computer that has never been connected to the internet, or entirely by hand with dice or coins, pencil, paper and the same math you'll do here.</p>
-    <p class="small">The point of this exercise is to walk you through, step by step, <strong>what a hardware wallet or wallet software does inside</strong> when it creates your keys. A wallet does all of this in a fraction of a second. Here you do it slowly enough to see every step: randomness → bits → checksum → numbers → words.</p>
+    <p class="small">The point of this exercise is to walk you through, step by step, <strong>what a hardware wallet or wallet software does inside</strong> when it creates your keys. A wallet does all of this in a fraction of a second. Here you do it slowly enough to see every step: randomness → bits → checksum → numbers → words → seed.</p>
   </section>
 
   <section class="warn" role="note" aria-label="Warning">
@@ -191,11 +195,33 @@
     <h2 style="margin-top:18px">Your 24 words</h2>
     <div class="phrase" id="phrase"></div>
     <p class="note" id="phraseNote">Your words appear here as you get each one right.</p>
-    <div class="why" style="margin-top:14px"><strong>What a wallet does next:</strong> it runs your 24 words (plus an optional extra passphrase) through a function called PBKDF2, 2048 rounds of HMAC-SHA512, to make a 512-bit "seed." From that seed it builds a master private key (BIP-32), and from the master key it makes all your addresses. Those steps are too long to do by hand, but they're the same every time, so the same 24 words always lead back to the same bitcoin.</div>
   </section>
 
   <section>
-    <h2><span class="step">Step 4</span>Hand it in</h2>
+    <h2><span class="step">Step 4</span>This is your actual seed</h2>
+    <div class="locked" id="seedLocked">🔒 Locked. This step opens when your checksum and all 24 words are right.</div>
+    <div class="hidden" id="seedBody">
+      <div class="seedtext small">
+        <p><strong>Your 24 words are not the seed.</strong> They're a human-friendly way of writing down your entropy, the 256 random bits you made with your dice or coin.</p>
+        <p>To build the real seed, your wallet takes those 24 words, plus an optional passphrase, and runs them through a function called <strong>PBKDF2</strong> with <strong>HMAC-SHA512</strong>, <strong>2,048 times in a row</strong>. That stretching is deliberate. It makes guessing attacks slow and expensive. The result is the 512-bit number below, the <strong>BIP-39 seed</strong>.</p>
+      </div>
+      <p class="small" style="margin:12px 0 4px"><strong>Your BIP-39 seed</strong> (128 hex characters = 512 bits):</p>
+      <div class="seed" id="seedOut"></div>
+      <div class="status small" id="seedStatus"></div>
+      <div class="seedtext small">
+        <p>Every private key, public key and address in your wallet comes from this one number. The wallet hashes it once more (HMAC-SHA512 with the key "Bitcoin seed", the BIP-32 standard) to make the master private key, and every address is built from that.</p>
+        <p>Change a single word, or add a single letter of passphrase, and you get a completely different seed and a completely different wallet. Try it:</p>
+      </div>
+      <div class="row">
+        <input class="text pass" id="pass" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Optional passphrase (leave blank for none)" aria-label="Optional passphrase">
+      </div>
+      <p class="note">The passphrase is case-sensitive, and spaces count. Your passphrase is not saved in the Excel file.</p>
+      <div class="why" style="margin-top:12px">This is the one step you can't check by hand, so verify it by comparing it against an independent tool like Ian Coleman's, which you can find at <a href="https://github.com/iancoleman/bip39" target="_blank" rel="noopener">github.com/iancoleman/bip39</a>. Paste your 24 words (and the same passphrase) into its "BIP39 Mnemonic" box, and its "BIP39 Seed" field should match yours exactly.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="step">Step 5</span>Hand it in</h2>
     <p class="small">Download your work as an Excel file. It opens in Excel or Numbers.</p>
     <div class="row"><button class="primary" id="download">Download my work (Excel)</button><span class="note" id="dlNote"></span></div>
   </section>
@@ -387,6 +413,72 @@ function sha256(msg) {
 const toHex = bytes => Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
 const bitsToBytes = s => { const o = new Uint8Array(s.length / 8); for (let i = 0; i < o.length; i++) o[i] = parseInt(s.slice(i*8, i*8+8), 2); return o; };
 
+
+/* ---------------- SHA-512, HMAC-SHA512 and PBKDF2 (plain JavaScript, so Step 4 also works offline) ----------------
+   The SHA-512 constants are "nothing up my sleeve" numbers, worked out here instead of typed in:
+   the starting values are the fractional parts of the square roots of the first 8 primes,
+   and the 80 round constants are the fractional parts of the cube roots of the first 80 primes (64 bits each). */
+const M64 = (1n << 64n) - 1n;
+function iroot(n, k) {                       // floor of the k-th root of a BigInt, by Newton's method
+  if (n < 2n) return n;
+  const kb = BigInt(k);
+  let x = 1n << BigInt(Math.ceil(n.toString(2).length / k) + 1);
+  for (;;) { const y = ((kb - 1n) * x + n / (x ** (kb - 1n))) / kb; if (y >= x) return x; x = y; }
+}
+const PRIMES80 = (() => { const p = []; for (let n = 2; p.length < 80; n++) if (p.every(q => n % q)) p.push(n); return p; })();
+const H512 = PRIMES80.slice(0, 8).map(p => iroot(BigInt(p) << 128n, 2) & M64);
+const K512 = PRIMES80.map(p => iroot(BigInt(p) << 192n, 3) & M64);
+const rotr64 = (x, n) => ((x >> n) | (x << (64n - n))) & M64;
+function compress512(H, dv, off) {          // one 128-byte block; returns the new 8-word state
+  const W = new Array(80);
+  for (let t = 0; t < 16; t++) W[t] = dv.getBigUint64(off + t * 8);
+  for (let t = 16; t < 80; t++) {
+    const s0 = rotr64(W[t-15], 1n) ^ rotr64(W[t-15], 8n) ^ (W[t-15] >> 7n);
+    const s1 = rotr64(W[t-2], 19n) ^ rotr64(W[t-2], 61n) ^ (W[t-2] >> 6n);
+    W[t] = (W[t-16] + s0 + W[t-7] + s1) & M64;
+  }
+  let [a, b, c, d, e, f, g, h] = H;
+  for (let t = 0; t < 80; t++) {
+    const T1 = (h + (rotr64(e, 14n) ^ rotr64(e, 18n) ^ rotr64(e, 41n)) + ((e & f) ^ ((e ^ M64) & g)) + K512[t] + W[t]) & M64;
+    const T2 = ((rotr64(a, 28n) ^ rotr64(a, 34n) ^ rotr64(a, 39n)) + ((a & b) ^ (a & c) ^ (b & c))) & M64;
+    h = g; g = f; f = e; e = (d + T1) & M64; d = c; c = b; b = a; a = (T1 + T2) & M64;
+  }
+  return [a, b, c, d, e, f, g, h].map((x, i) => (H[i] + x) & M64);
+}
+function sha512From(H, data, prefixLen) {   // finish a hash whose first prefixLen bytes (a multiple of 128) are already in H
+  const total = Math.ceil((data.length + 17) / 128) * 128;
+  const buf = new Uint8Array(total); buf.set(data); buf[data.length] = 0x80;
+  const dv = new DataView(buf.buffer);
+  dv.setBigUint64(total - 8, BigInt((prefixLen + data.length) * 8));
+  for (let off = 0; off < total; off += 128) H = compress512(H, dv, off);
+  const out = new Uint8Array(64), ov = new DataView(out.buffer);
+  H.forEach((x, i) => ov.setBigUint64(i * 8, x));
+  return out;
+}
+const sha512 = data => sha512From(H512, data, 0);
+function hmacSha512(key) {                  // returns msg -> HMAC-SHA512(key, msg), with the key part done once
+  if (key.length > 128) key = sha512(key);
+  const ip = new Uint8Array(128).fill(0x36), op = new Uint8Array(128).fill(0x5c);
+  key.forEach((b, i) => { ip[i] ^= b; op[i] ^= b; });
+  const Hi = compress512(H512, new DataView(ip.buffer), 0), Ho = compress512(H512, new DataView(op.buffer), 0);
+  return msg => sha512From(Ho, sha512From(Hi, msg, 128), 128);
+}
+function pbkdf2Sha512(password, salt, rounds) {   // 64-byte (512-bit) result
+  const mac = hmacSha512(password);
+  const first = new Uint8Array(salt.length + 4); first.set(salt); first[salt.length + 3] = 1;
+  let U = mac(first); const T = U.slice();
+  for (let i = 1; i < rounds; i++) { U = mac(U); for (let j = 0; j < 64; j++) T[j] ^= U[j]; }
+  return T;
+}
+function bip39Seed(mnemonic, passphrase) {  // BIP-39: PBKDF2-HMAC-SHA512, 2048 rounds, salt = "mnemonic" + passphrase
+  const enc = new TextEncoder();
+  return pbkdf2Sha512(enc.encode(mnemonic.normalize("NFKD")), enc.encode(("mnemonic" + passphrase).normalize("NFKD")), 2048);
+}
+
+// official BIP-39 test case (passphrase "TREZOR"), checked before any seed is shown
+const SEED_TEST_WORDS = "abandon ".repeat(23) + "art";
+const SEED_TEST_SEED = "bda85446c68413707090a52022edd26a1c9462295029f2e60cd7c4f2bbd3097170af7a4d73245cafa9c3cca8d561a7c3de6f5d4a10be8ed2a5e608d68f92fcc8";
+
 /* ---------------- word list check ---------------- */
 function loadWords() {
   const w = WORDLIST_TEXT.trim().split(/\s+/);
@@ -575,9 +667,37 @@ function update() {
   }
   const nRight = words.filter(Boolean).length;
   $("phrase").innerHTML = words.map((w, i) => w ? `<div><span>${i+1}.</span>${w}</div>` : "").join("");
-  $("phraseNote").textContent = nRight === 24 ? (s.correct ? "All 24 words right. Nice work. Go to Step 4." : "All 24 rows match your bits, but your checksum isn't right yet, so row 24 is built on the wrong checksum.")
+  $("phraseNote").textContent = nRight === 24 ? (s.correct ? "All 24 words right. Nice work. Your seed is unlocked in Step 4." : "All 24 rows match your bits, but your checksum isn't right yet, so row 24 is built on the wrong checksum.")
                                               : `${nRight} of 24 words right so far. Your words appear here as you get each one right.`;
+  // Step 4: the seed only appears once the checksum and all 24 words are right
+  const unlocked = !!WORDS && s.correct && nRight === 24;
+  $("seedLocked").classList.toggle("hidden", unlocked);
+  $("seedBody").classList.toggle("hidden", !unlocked);
+  if (unlocked) requestSeed(words.join(" ")); else { seedKey = ""; seedHex = ""; clearTimeout(seedTimer); }
   window.__state = s; window.__words = words;
+}
+
+/* ---------------- Step 4: work out the seed (off the main update, since 2048 rounds take a moment) ---------------- */
+let seedKey = "", seedHex = "", seedTimer = null, seedTestOk = null;
+function requestSeed(mnemonic) {
+  const pass = $("pass").value, key = mnemonic + "\u0000" + pass;
+  if (key === seedKey) return;
+  seedKey = key; seedHex = "";
+  $("seedOut").textContent = "Working: 2,048 rounds of HMAC-SHA512…";
+  $("seedStatus").textContent = "";
+  clearTimeout(seedTimer);
+  seedTimer = setTimeout(() => {
+    if (seedTestOk === null) seedTestOk = toHex(bip39Seed(SEED_TEST_WORDS, "TREZOR")) === SEED_TEST_SEED;
+    if (key !== seedKey) return;
+    if (!seedTestOk) {
+      $("seedOut").textContent = "(not shown)";
+      $("seedStatus").innerHTML = '<span class="bad">Seed self-test failed. Don\'t trust this page\'s seed.</span>'; return;
+    }
+    seedHex = toHex(bip39Seed(mnemonic, pass));
+    $("seedOut").textContent = seedHex;
+    $("seedStatus").innerHTML = '<span class="ok">✓</span> <span class="muted">The seed math passed the official BIP-39 test case before showing you this.</span>' +
+      (pass ? ' <span class="muted">This is the seed <strong>with</strong> your passphrase.</span>' : "");
+  }, 30);
 }
 
 /* ---------------- Excel export (a real .xlsx, built in the page) ---------------- */
@@ -657,6 +777,9 @@ function buildXlsx() {
     [B("Checksum correct?"), !s.complete ? "Not finished" : (s.correct ? "YES" : "NO")],
     [B("Rows with M and word both right"), `${nRight} of 24`],
     [B("Total wrong tries"), ans.reduce((a, x) => a + x.tries, 0)],
+    [B("Seed unlocked (Step 4)?"), seedHex ? "YES" : "NO"],
+    [B("BIP-39 seed (512 bits, hex)"), seedHex || "(not unlocked)"],
+    [B("Passphrase used for the seed?"), seedHex ? ($("pass").value ? "yes (the passphrase itself is not saved)" : "no") : ""],
     [], [B("24 words (as the student typed them)"), B("Right?")],
     ...ans.map((a, i) => [i + 1, a.wT || "(blank)", yn(a.done, a.wT, a.wOk)]),
     [], ["Learning exercise only. Not for self-custody of real bitcoin: this was made on a computer connected to the internet."],
@@ -721,6 +844,7 @@ $("copyCmd").addEventListener("click", async () => {
   setTimeout(() => $("copied").textContent = "", 4000);
 });
 $("hex").addEventListener("input", e => { e.target.value = e.target.value.replace(/\s/g, "").toLowerCase(); update(); });
+$("pass").addEventListener("input", update);
 window.addEventListener("beforeunload", e => { if (entropyInputs.some(i => i.value)) { e.preventDefault(); e.returnValue = ""; } });
 
 let hashShown = false;
