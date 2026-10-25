@@ -204,7 +204,8 @@
     <div class="hidden" id="seedBody">
       <div class="seedtext small">
         <p><strong>Your 24 words are not the seed.</strong> They're a human-friendly way of writing down 264 bits: your 256 random bits from the dice or coin, plus the 8-bit checksum.</p>
-        <p>To build the real seed, your wallet takes those 24 words, plus an optional passphrase, and runs them through a function called <strong>PBKDF2</strong>. PBKDF2 runs <strong>HMAC-SHA512</strong> 2,048 times in a chain, each round feeding the next, and combines all 2,048 results (it XORs them together) into one answer. The result is the 512-bit number below, the <strong>BIP-39 seed</strong>.</p>
+        <p><strong>What's a passphrase?</strong> Your 24 words are all a wallet needs. But BIP-39 also lets you add an optional <strong>passphrase</strong>: any extra text you choose, sometimes called the &ldquo;25th word.&rdquo; It's an extra secret. Someone who finds your 24 words still can't open the wallet without it. But lose the passphrase, and your words alone won't get the bitcoin back. A passphrase adds only as much security as it is hard to guess, so it never makes up for weak dice or coin bits. Most wallets leave it blank unless you turn it on.</p>
+        <p>To build the real seed, your wallet writes your 24 words as one sentence (a single space between words) and feeds that <em>text</em>, not the bits, into a function called <strong>PBKDF2</strong> as its password. The passphrase goes in as the <strong>salt</strong>: extra text that gets mixed in with the password before hashing, so the same password with a different salt gives a completely different result. In BIP-39, the salt is the word <span class="mono">mnemonic</span> with your passphrase added on the end, so no passphrase means the salt is just <span class="mono">mnemonic</span>. PBKDF2 runs <strong>HMAC-SHA512</strong> 2,048 times in a chain, each round feeding the next, and combines all 2,048 results (it XORs them together) into one answer. The result is the 512-bit number below, the <strong>BIP-39 seed</strong>.</p>
         <p>That stretching is deliberate: it makes each guess 2,048 times slower for an attacker. But stretching is <strong>not</strong> randomness. It can't rescue weak or made-up bits. A patterned or guessable phrase is still found quickly, just a little more slowly. Your security comes from your 256 real dice or coin bits.</p>
       </div>
       <p class="small" style="margin:12px 0 4px"><strong>Your BIP-39 seed</strong> (128 hex characters = 512 bits):</p>
@@ -870,3 +871,4 @@ window.__buildXlsx = buildXlsx;   // used by tests
 </script>
 </body>
 </html>
+
