@@ -333,7 +333,7 @@
       </div>
       <p class="note">The passphrase is case-sensitive, and spaces count. Your passphrase is not saved in the Excel file.</p>
       <details class="why" style="margin-top:8px"><summary><strong>What does the strength meter mean?</strong></summary>
-        <p style="margin:6px 0">A passphrase only matters if someone has already got your 24 words. Then it's the <em>only</em> lock left, and they can try guesses as fast as their computers allow. BIP-39 stretches each guess with just 2,048 rounds of PBKDF2, so guesses are fairly cheap. The meter assumes an attacker who has your words and can try <strong>a billion passphrases a second</strong> (a large rack of graphics cards), and shows roughly how long they'd need on average.</p>
+        <p style="margin:6px 0">A passphrase only matters if someone has already got your 24 words. Then it's the <em>only</em> lock left, and they can try guesses as fast as their computers allow. BIP-39 stretches each guess with just 2,048 rounds of PBKDF2, so guesses are fairly cheap. The meter shows roughly how long three kinds of attacker would need on average: an <strong>ordinary attacker</strong> with one regular computer, a <strong>specialized attacker</strong> with a dedicated rig of graphics cards, and a <strong>nation state</strong> with an enormous budget. The speeds are rough orders of magnitude, not exact figures. Real attacks on passphrases are rare, because the attacker first has to get your 24 words. A time shown in red is under a year.</p>
         <p style="margin:6px 0">It's a rough estimate. It counts length and character types, and gives less credit for common passwords, keyboard runs, repeats, and BIP-39 words. A passphrase built from <em>randomly chosen</em> words (rolled with dice, not picked by you) is strong and easy to remember: each random word from the 2,048 list adds 11 bits.</p>
         <p style="margin:6px 0"><strong>Forget the passphrase and the bitcoin is gone.</strong> There's no reset. A wrong passphrase doesn't give an error, it opens a different, empty wallet. Back it up as carefully as the words, but store it separately.</p>
       </details>
@@ -1572,7 +1572,13 @@ $("hex").addEventListener("input", e => { e.target.value = e.target.value.replac
 $("pass").addEventListener("input", update);
 
 // ---- Passphrase strength (rough estimate, teaching only) ----
-const PASS_RATE = 1e9;   // guesses per second, assuming the attacker already has the 24 words
+// Rough guesses per second, assuming the attacker already has the 24 words. Each guess costs
+// 2,048 rounds of PBKDF2-HMAC-SHA512 plus key derivation, so these are orders of magnitude only.
+const ATTACKERS = [
+  { who: "Ordinary attacker", what: "one regular computer running free recovery software", rate: 1e4 },
+  { who: "Specialized attacker", what: "a dedicated rig of dozens of high-end graphics cards", rate: 1e7 },
+  { who: "Nation state", what: "a huge budget: data centers or custom chips", rate: 1e11 },
+];
 const COMMON_PASS = new Set(("password passphrase passw0rd p@ssword p@ssw0rd 123456 1234567 12345678 123456789 1234567890 qwerty qwertyuiop asdf asdfgh asdfghjkl letmein welcome iloveyou admin monkey dragon master sunshine princess football baseball shadow superman trustno1 abc123 111111 000000 " +
   "bitcoin satoshi nakamoto hodl moon tothemoon lambo crypto blockchain trezor ledger wallet secret mnemonic seed").split(" "));
 const KEY_ROWS = ["`1234567890-=", "qwertyuiop[]\\", "asdfghjkl;'", "zxcvbnm,./", "abcdefghijklmnopqrstuvwxyz", "01234567890"];
@@ -1628,7 +1634,7 @@ function fmtTime(sec) {
   if (sec < 1) return "less than a second";
   const units = [["year", 31557600], ["day", 86400], ["hour", 3600], ["minute", 60], ["second", 1]];
   if (sec >= 31557600 * 1e12) return "far longer than the age of the universe";
-  if (sec >= 31557600 * 1e6) { const y = sec / 31557600; return `about ${y >= 1e9 ? (y / 1e9).toPrecision(2) + " billion" : (y / 1e6).toPrecision(2) + " million"} years`; }
+  if (sec >= 31557600 * 1e6) { const y = sec / 31557600; const f = x => Number(x.toPrecision(2)).toLocaleString(); return `about ${y >= 1e9 ? f(y / 1e9) + " billion" : f(y / 1e6) + " million"} years`; }
   for (const [u, s] of units) if (sec >= s) { const v = Math.round(sec / s); return `about ${v.toLocaleString()} ${u}${v === 1 ? "" : "s"}`; }
 }
 function showPassStrength() {
@@ -1640,9 +1646,11 @@ function showPassStrength() {
   const [, label, color] = levels.find(l => bits < l[0]);
   $("pmFill").style.width = Math.min(100, bits / 100 * 100) + "%"; $("pmFill").style.background = color;
   $("pmBar").setAttribute("aria-valuenow", b); $("pmBar").setAttribute("aria-valuetext", label);
-  const secs = Math.pow(2, bits) / 2 / PASS_RATE;
-  $("pmText").innerHTML = `<strong style="color:${color}">${label}</strong> · about ${b} bits · cracked in ${fmtTime(secs)} by an attacker who already has your 24 words` +
-    (notes.length ? `<br><span class="muted">Less credit given for: ${notes.join(", ")}.</span>` : "");
+  const rows = ATTACKERS.map(a => { const secs = Math.pow(2, bits) / 2 / a.rate;
+    return `<tr><td><strong>${a.who}</strong><br><span class="muted">${a.what}, about ${a.rate.toLocaleString()} guesses a second</span></td><td style="color:${secs < 31557600 ? "var(--bad)" : "var(--good)"};font-weight:600">${fmtTime(secs)}</td></tr>`; }).join("");
+  $("pmText").innerHTML = `<strong style="color:${color}">${label}</strong> · about ${b} bits` +
+    (notes.length ? ` <span class="muted">· less credit given for: ${notes.join(", ")}</span>` : "") +
+    `<table class="kdf" style="margin:6px 0 0"><tr><th>If someone already has your 24 words…</th><th>Average time to guess this passphrase</th></tr>${rows}</table>`;
 }
 $("pass").addEventListener("input", showPassStrength);
 window.addEventListener("beforeunload", e => {
