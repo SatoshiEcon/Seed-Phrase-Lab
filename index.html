@@ -26,6 +26,8 @@
   section { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-bottom: 18px; }
   .step { display: inline-block; background: var(--accent); color: #fff; border-radius: 999px; padding: 1px 10px; font-size: .8rem; font-weight: 700; margin-right: 6px; vertical-align: 2px; }
   .muted { color: var(--muted); } .small { font-size: .88rem; }
+  .pmeter { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; margin: 8px 0 4px; max-width: 420px; }
+  .pmeter > div { height: 100%; width: 0; transition: width .2s, background .2s; }
   .ok { color: var(--good); font-weight: 700; } .bad { color: var(--bad); font-weight: 700; }
   .mono { font-family: ui-monospace, Menlo, Consolas, monospace; }
   label.name { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
@@ -325,7 +327,16 @@
       <div class="row">
         <input class="text pass" id="pass" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Optional passphrase (leave blank for none)" aria-label="Optional passphrase">
       </div>
+      <div id="passStrength" hidden>
+        <div class="pmeter" role="meter" aria-label="Passphrase strength" aria-valuemin="0" aria-valuemax="128" id="pmBar"><div id="pmFill"></div></div>
+        <p class="small" id="pmText" style="margin:0"></p>
+      </div>
       <p class="note">The passphrase is case-sensitive, and spaces count. Your passphrase is not saved in the Excel file.</p>
+      <details class="why" style="margin-top:8px"><summary><strong>What does the strength meter mean?</strong></summary>
+        <p style="margin:6px 0">A passphrase only matters if someone has already got your 24 words. Then it's the <em>only</em> lock left, and they can try guesses as fast as their computers allow. BIP-39 stretches each guess with just 2,048 rounds of PBKDF2, so guesses are fairly cheap. The meter assumes an attacker who has your words and can try <strong>a billion passphrases a second</strong> (a large rack of graphics cards), and shows roughly how long they'd need on average.</p>
+        <p style="margin:6px 0">It's a rough estimate. It counts length and character types, and gives less credit for common passwords, keyboard runs, repeats, and BIP-39 words. A passphrase built from <em>randomly chosen</em> words (rolled with dice, not picked by you) is strong and easy to remember: each random word from the 2,048 list adds 11 bits.</p>
+        <p style="margin:6px 0"><strong>Forget the passphrase and the bitcoin is gone.</strong> There's no reset. A wrong passphrase doesn't give an error, it opens a different, empty wallet. Back it up as carefully as the words, but store it separately.</p>
+      </details>
       <div class="why" style="margin-top:12px">This is the one step you can't check by hand, so verify it by comparing it against an independent tool like Ian Coleman's, which you can find at <a href="https://github.com/iancoleman/bip39" target="_blank" rel="noopener">github.com/iancoleman/bip39</a>. Paste your 24 words (and the same passphrase) into its "BIP39 Mnemonic" box, and its "BIP39 Seed" field should match yours exactly.</div>
     </div>
   </section>
@@ -1559,6 +1570,81 @@ $("copyCmd").addEventListener("click", async () => {
 });
 $("hex").addEventListener("input", e => { e.target.value = e.target.value.replace(/\s/g, "").toLowerCase(); update(); });
 $("pass").addEventListener("input", update);
+
+// ---- Passphrase strength (rough estimate, teaching only) ----
+const PASS_RATE = 1e9;   // guesses per second, assuming the attacker already has the 24 words
+const COMMON_PASS = new Set(("password passphrase passw0rd p@ssword p@ssw0rd 123456 1234567 12345678 123456789 1234567890 qwerty qwertyuiop asdf asdfgh asdfghjkl letmein welcome iloveyou admin monkey dragon master sunshine princess football baseball shadow superman trustno1 abc123 111111 000000 " +
+  "bitcoin satoshi nakamoto hodl moon tothemoon lambo crypto blockchain trezor ledger wallet secret mnemonic seed").split(" "));
+const KEY_ROWS = ["`1234567890-=", "qwertyuiop[]\\", "asdfghjkl;'", "zxcvbnm,./", "abcdefghijklmnopqrstuvwxyz", "01234567890"];
+function isRun(t) {  // keyboard row, alphabet or digit run, either direction
+  if (t.length < 3) return false; const l = t.toLowerCase();
+  return KEY_ROWS.some(r => r.includes(l) || r.split("").reverse().join("").includes(l));
+}
+function charsetBits(t) {
+  let n = 0;
+  if (/[a-z]/.test(t)) n += 26; if (/[A-Z]/.test(t)) n += 26; if (/[0-9]/.test(t)) n += 10;
+  if (/[^a-zA-Z0-9\s]/.test(t)) n += 33; if (/[^\x00-\x7f]/.test(t)) n += 100;
+  return n ? Math.log2(n) : 0;
+}
+function tokenBits(tok) {
+  const low = tok.toLowerCase(), alpha = low.replace(/[^a-z]/g, "");
+  const leet = low.replace(/0/g, "o").replace(/1/g, "l").replace(/3/g, "e").replace(/4|@/g, "a").replace(/5|\$/g, "s").replace(/7/g, "t");
+  if (COMMON_PASS.has(low) || COMMON_PASS.has(leet)) return { bits: 8, why: "common password" };
+  if (/^(.)\1+$/.test(tok)) return { bits: 4 + Math.log2(tok.length), why: "repeated character" };
+  if (isRun(tok)) return { bits: 6, why: "keyboard or alphabet run" };
+  // word with a few digits/symbols tacked on, e.g. "summer2024!"
+  const m = tok.match(/^([A-Za-z]{3,})([0-9!@#$%^&*?.]{0,4})$/);
+  if (m) {
+    const w = m[1].toLowerCase(), extra = m[2].length ? Math.min(m[2].length * 4, 14) : 0;
+    const cap = /^[A-Z][a-z]+$/.test(m[1]) ? 1 : (/[A-Z]/.test(m[1]) && /[a-z]/.test(m[1]) ? m[1].length : 0);
+    if (WORDS && WORDS.includes(w)) return { bits: 11 + cap + extra, why: "BIP-39 word" };
+    if (COMMON_PASS.has(w)) return { bits: 8 + cap + extra, why: "common password" };
+    if (/[aeiouy]/.test(w) && w.length <= 12) return { bits: 14 + Math.min(w.length, 6) + cap + extra, why: "dictionary-style word" };
+  }
+  // leetspeak word with extras tacked on, e.g. "Tr0ub4dor&3" or "P@ssw0rd!"
+  const lm = tok.match(/^(.{3,}?)([0-9!@#$%^&*?.]{0,4})$/);
+  if (lm && /[0-9@$]/.test(lm[1])) {
+    const base = lm[1].toLowerCase().replace(/0/g, "o").replace(/1/g, "l").replace(/3/g, "e").replace(/4|@/g, "a").replace(/5|\$/g, "s").replace(/7/g, "t");
+    if (/^[a-z]+$/.test(base) && /[aeiouy]/.test(base) && base.length <= 14) {
+      const extra = Math.min(lm[2].length * 4, 14), cap = /[A-Z]/.test(lm[1]) ? 2 : 0;
+      if (COMMON_PASS.has(base)) return { bits: 10 + cap + extra, why: "common password with swapped letters" };
+      return { bits: 14 + Math.min(base.length, 6) + 3 + cap + extra, why: "word with swapped letters (like 0 for o)" };
+    }
+  }
+  // anything else: count it as random characters, with repeats squashed
+  const squashed = tok.replace(/(.)\1{2,}/g, "$1$1");
+  return { bits: squashed.length * charsetBits(tok), why: "" };
+}
+function passStrength(p) {
+  const toks = p.split(/\s+/).filter(Boolean);
+  let bits = 0; const notes = new Set();
+  toks.forEach(t => { const r = tokenBits(t); bits += r.bits; if (r.why) notes.add(r.why); });
+  if (toks.length > 1) bits += Math.log2(toks.length);  // a little credit for word order / spacing
+  const uniq = new Set(toks.map(t => t.toLowerCase())).size;
+  if (uniq < toks.length) { bits -= (toks.length - uniq) * 8; notes.add("repeated word"); }
+  return { bits: Math.max(0, Math.min(bits, 256)), notes: [...notes] };
+}
+function fmtTime(sec) {
+  if (sec < 1) return "less than a second";
+  const units = [["year", 31557600], ["day", 86400], ["hour", 3600], ["minute", 60], ["second", 1]];
+  if (sec >= 31557600 * 1e12) return "far longer than the age of the universe";
+  if (sec >= 31557600 * 1e6) { const y = sec / 31557600; return `about ${y >= 1e9 ? (y / 1e9).toPrecision(2) + " billion" : (y / 1e6).toPrecision(2) + " million"} years`; }
+  for (const [u, s] of units) if (sec >= s) { const v = Math.round(sec / s); return `about ${v.toLocaleString()} ${u}${v === 1 ? "" : "s"}`; }
+}
+function showPassStrength() {
+  const p = $("pass").value, box = $("passStrength");
+  if (!p) { box.hidden = true; return; }
+  box.hidden = false;
+  const { bits, notes } = passStrength(p), b = Math.round(bits);
+  const levels = [[28, "Very weak", "var(--bad)"], [45, "Weak", "var(--bad)"], [64, "Fair", "var(--accent)"], [80, "Strong", "var(--good)"], [Infinity, "Very strong", "var(--good)"]];
+  const [, label, color] = levels.find(l => bits < l[0]);
+  $("pmFill").style.width = Math.min(100, bits / 100 * 100) + "%"; $("pmFill").style.background = color;
+  $("pmBar").setAttribute("aria-valuenow", b); $("pmBar").setAttribute("aria-valuetext", label);
+  const secs = Math.pow(2, bits) / 2 / PASS_RATE;
+  $("pmText").innerHTML = `<strong style="color:${color}">${label}</strong> · about ${b} bits · cracked in ${fmtTime(secs)} by an attacker who already has your 24 words` +
+    (notes.length ? `<br><span class="muted">Less credit given for: ${notes.join(", ")}.</span>` : "");
+}
+$("pass").addEventListener("input", showPassStrength);
 window.addEventListener("beforeunload", e => {
   if (skipUnloadWarn) return;
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(getState())); return; } catch (err) {}
@@ -1589,3 +1675,4 @@ window.__buildXlsx = buildXlsx;   // used by tests
 </script>
 </body>
 </html>
+
