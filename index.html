@@ -87,6 +87,65 @@
   .seedtext p { margin: 8px 0; }
   input.pass { width: min(420px, 100%); min-width: 0; }
   .hidden { display: none !important; }
+  /* ---- live diagrams ---- */
+  .viz { border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin: 12px 0; background: var(--bg); }
+  .viz h3 { margin: 0 0 6px; font-size: .95rem; }
+  .viz .cap { font-size: .85rem; color: var(--muted); margin: 8px 0 0; }
+  .pipe { display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch; }
+  .stage { flex: 1 1 130px; border: 2px solid var(--line); border-radius: 10px; padding: 8px 10px; background: var(--panel); position: relative; min-width: 120px; }
+  .stage .lbl { font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  .stage .val { font: 700 .9rem/1.35 ui-monospace, Menlo, monospace; word-break: break-all; margin-top: 2px; }
+  .stage.done { border-color: var(--good); }
+  .stage.now { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+  .stage.off { opacity: .5; border-style: dashed; }
+  .arrow { align-self: center; color: var(--muted); font-weight: 700; }
+  .bitbar { display: grid; grid-template-columns: repeat(auto-fill, minmax(10px, 1fr)); gap: 2px; margin-top: 6px; }
+  .bitbar i { display: block; height: 14px; border-radius: 2px; background: transparent; border: 1px dashed var(--line); }
+  .bitbar i.b1, .bitbar i.b0, .bitbar i.c1, .bitbar i.c0 { border: 0; }
+  .bitbar i.b1 { background: var(--input-ink); }
+  .bitbar i.b0 { background: color-mix(in srgb, var(--input-ink) 38%, var(--bg)); }
+  .bitbar i.c1 { background: var(--check-ink); }
+  .bitbar i.c0 { background: color-mix(in srgb, var(--check-ink) 40%, var(--bg)); }
+  .bitbar i.cq { background: transparent; border: 1px dashed var(--check-ink); }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: var(--muted); margin-top: 6px; }
+  .legend b { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -2px; margin-right: 4px; }
+  .flowline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: .9rem; margin: 8px 0; }
+  .chip { border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; background: var(--panel); font: .85rem/1.4 ui-monospace, Menlo, monospace; word-break: break-all; }
+  .chip.hl { border-color: var(--check-ink); color: var(--check-ink); font-weight: 700; }
+  .segs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 8px; }
+  .seg { border: 2px solid var(--line); border-radius: 8px; padding: 6px 8px; background: var(--panel); }
+  .seg.right { border-color: var(--good); }
+  .seg .h { font-size: .75rem; color: var(--muted); }
+  .seg .bits { display: grid; grid-template-columns: repeat(11, 1fr); gap: 1px; margin: 4px 0; }
+  .seg .bits i { height: 10px; border-radius: 1px; background: transparent; border: 1px dashed var(--line); }
+  .seg .bits i.b1, .seg .bits i.b0, .seg .bits i.c1, .seg .bits i.c0 { border: 0; }
+  .seg .bits i.b1 { background: var(--input-ink); } .seg .bits i.b0 { background: color-mix(in srgb, var(--input-ink) 38%, var(--bg)); }
+  .seg .bits i.c1 { background: var(--check-ink); } .seg .bits i.c0 { background: color-mix(in srgb, var(--check-ink) 40%, var(--bg)); }
+  .seg .w { font-weight: 700; font-size: .9rem; }
+  table.kdf { border-collapse: collapse; width: 100%; font-size: .82rem; margin-top: 6px; }
+  table.kdf th, table.kdf td { border-bottom: 1px solid var(--line); padding: 5px 6px; text-align: left; }
+  table.kdf td.m { font-family: ui-monospace, Menlo, monospace; word-break: break-all; }
+  .q { border-top: 1px solid var(--line); padding-top: 10px; margin-top: 12px; }
+  .q button { display: block; width: 100%; text-align: left; margin: 5px 0; }
+  .q button.right { border-color: var(--good); color: var(--good); font-weight: 700; }
+  .q button.wrong { border-color: var(--bad); color: var(--bad); }
+  .split { font: .9rem/1.6 ui-monospace, Menlo, monospace; word-break: break-all; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--panel); }
+  .split .L { color: var(--input-ink); font-weight: 700; } .split .R { color: var(--check-ink); font-weight: 700; }
+  .blocks { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin: 8px 0; }
+  @media (max-width: 760px) { .blocks { grid-template-columns: repeat(4, 1fr); } }
+  .blocks button { font: 700 .95rem ui-monospace, Menlo, monospace; padding: 6px 4px; text-align: center; }
+  .blocks button span { display: block; font: 400 .7rem system-ui, sans-serif; color: var(--muted); }
+  .blocks button.L { border-color: var(--input-ink); color: var(--input-ink); }
+  .blocks button.R { border-color: var(--check-ink); color: var(--check-ink); }
+  .blocks button.miss { border-color: var(--bad); }
+  .blocks button:disabled { opacity: 1; cursor: default; }
+  .addr { font: 700 1.1rem ui-monospace, Menlo, monospace; word-break: break-all; border: 2px solid var(--good); border-radius: 8px; padding: 10px 12px; background: var(--word); }
+  input.short { width: 140px; min-width: 0; font-family: ui-monospace, Menlo, monospace; }
+  .pathbig { font: 700 1.3rem ui-monospace, Menlo, monospace; margin: 8px 0; }
+  .pathbig span { padding: 2px 6px; border-radius: 6px; }
+  .pathbig .h { background: color-mix(in srgb, var(--check-ink) 22%, var(--bg)); }
+  .pathbig .n { background: color-mix(in srgb, var(--input-ink) 22%, var(--bg)); }
+  select.text { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); }
 </style>
 </head>
 <body>
@@ -106,12 +165,28 @@
 
   <p class="sub">Roll dice or flip a coin, turn the results into 256 bits, find the checksum, then work out each of your 24 words yourself. The page checks your answers as you go. Get all 24 right and you unlock your actual seed. At the end, download your work as an Excel file and hand it in.</p>
 
+  <section>
+    <h2>Save your work</h2>
+    <p class="small">Your work saves automatically in this browser as you go, so you can close the tab and come back. To keep a copy or switch computers, download your Excel file, then load it back here to pick up exactly where you left off. Your passphrase is never saved.</p>
+    <div class="row">
+      <button class="primary" id="topSave">Download my work (Excel)</button>
+      <button id="topLoad">Load my work</button>
+      <input type="file" id="loadFile" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="hidden">
+      <button id="clearSaved">Start over</button>
+      <span class="note" id="saveNote"></span>
+    </div>
+    <h3 class="way">Or just paste your work</h3>
+    <p class="small">Paste your <strong>24 words</strong> (from the Summary sheet of your Excel file, or wherever you wrote them), and every step fills in. Or paste your <strong>256 bits</strong> (Sheet 2, "256 bits as one string") to fill in Step 1 and do the rest yourself.</p>
+    <textarea class="text" id="pasteBox" rows="3" style="width:100%;font-family:ui-monospace,Menlo,monospace" placeholder="Paste 24 words or 256 bits here" autocomplete="off" spellcheck="false"></textarea>
+    <div class="row"><button class="primary" id="pasteBtn">Fill in my work</button><span class="note" id="pasteNote"></span></div>
+  </section>
+
   <section class="about">
     <h2>About this exercise</h2>
     <p class="small"><strong>This is a learning exercise only.</strong> The seed phrase you make here is <strong>not</strong> for holding (self-custody of) real bitcoin. This page runs in a web browser on a computer that is connected to the internet, and anything typed on an online computer could be seen by malware or other software.</p>
     <p class="small">Real keys can be made completely offline: on a computer that has never been connected to the internet, or entirely by hand with dice or coins, pencil, paper and the same math you'll do here.</p>
     <p class="small">The point of this exercise is to walk you through, step by step, <strong>what a hardware wallet or wallet software does inside</strong> when it creates your keys. A wallet does all of this in a fraction of a second. Here you do it slowly enough to see every step: randomness → bits → checksum → numbers → words → seed.</p>
-    <p class="small"><strong>What this exercise covers:</strong> the BIP-39 standard, from randomness to your 24 words and the 512-bit seed. It stops there. It does <strong>not</strong> make the BIP-32 master key, the child keys, or any Bitcoin addresses. A wallet does those steps next.</p>
+    <p class="small"><strong>What this exercise covers:</strong> the whole path a wallet follows. BIP-39 takes you from randomness to your 24 words and the 512-bit seed. Then BIP-32 turns that seed into a master key, walks down a derivation path one level at a time, and ends at a real Bitcoin address made from your own dice or coin flips.</p>
   </section>
 
   <section class="warn" role="note" aria-label="Warning">
@@ -121,6 +196,13 @@
       <li><strong>Use real dice or a real coin. Don't make up your bits.</strong> People are bad at being random. Bits you pick in your head, patterns (like 0101…), or all 0s or all 1s make words that thieves can guess. Thieves run programs that constantly check weak, guessable keys and empty any bitcoin they find.</li>
     </ul>
     <p class="note" id="listStatus" style="margin:10px 0 0">Checking the word list…</p>
+  </section>
+
+  <section>
+    <h2>The big picture</h2>
+    <p class="small">This is everything a wallet does to make a seed, and it fills in with <strong>your</strong> numbers as you work. Each box is one step below. The highlighted box is the one you're on.</p>
+    <div class="pipe" id="pipe"></div>
+    <p class="cap note" style="margin-top:8px">Only the first box has any randomness in it. Every step after that is fixed math: the same input always gives the same output. That's why your words can rebuild your wallet anywhere, and why weak randomness in box 1 can never be fixed later.</p>
   </section>
 
   <section>
@@ -135,6 +217,12 @@
     <p class="note">Tip: the cursor jumps to the next box by itself. You can also paste a string of 0s and 1s into any box.</p>
     <div class="scroll"><table class="grid" id="bitGrid"></table></div>
     <div class="status" id="bitStatus"></div>
+    <div class="viz">
+      <h3>Your randomness so far</h3>
+      <div class="bitbar" id="bar1"></div>
+      <div class="legend"><span><b style="background:var(--input-ink)"></b>1</span><span><b style="background:color-mix(in srgb, var(--input-ink) 38%, var(--bg))"></b>0</span><span><b style="border:1px dashed var(--line)"></b>not rolled yet</span></div>
+      <p class="cap" id="bar1cap"></p>
+    </div>
   </section>
 
   <section>
@@ -169,6 +257,13 @@
       <p class="note">Each hex character is 4 bits: 0 = 0000, 1 = 0001 … 9 = 1001, a = 1010, b = 1011, c = 1100, d = 1101, e = 1110, f = 1111.</p>
     </div>
     <div class="status" id="hexStatus"></div>
+    <div class="viz">
+      <h3>What just happened</h3>
+      <div class="flowline" id="ckFlow"></div>
+      <div class="bitbar" id="bar2"></div>
+      <div class="legend"><span><b style="background:var(--input-ink)"></b>your 256 bits</span><span><b style="background:var(--check-ink)"></b>8 checksum bits</span></div>
+      <p class="cap" id="bar2cap"></p>
+    </div>
   </section>
 
     <section>
@@ -192,6 +287,12 @@
     </div>
     <p class="small">The word list: <a href="https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt" target="_blank" rel="noopener">official BIP-39 English list on GitHub</a> (the line numbers on the left are N), or open the copy below.</p>
     <details class="wl"><summary>Show the word list here (line N = word)</summary><div id="wordList" class="wlgrid"></div></details>
+    <div class="viz">
+      <h3>The same 264 bits, cut into 24 pieces</h3>
+      <p class="cap" style="margin-top:0">Nothing new is added here. Your bits from Steps 1 and 2 are just read 11 at a time. Each piece shows its number and word once you've worked it out.</p>
+      <div class="segs" id="segs"></div>
+      <p class="cap">Look at word 24: only its first 3 bits are yours. The other 8 are the checksum. That's why the last word isn't fully random, and why it's the one that "checks" the others.</p>
+    </div>
     <div class="scroll"><table class="grid" id="wordGrid"></table></div>
     <h2 style="margin-top:18px">Your 24 words</h2>
     <div class="phrase" id="phrase"></div>
@@ -208,11 +309,17 @@
         <p>To build the real seed, your wallet writes your 24 words as one sentence (a single space between words) and feeds that <em>text</em>, not the bits, into a function called <strong>PBKDF2</strong> as its password. The passphrase goes in as the <strong>salt</strong>: extra text that gets mixed in with the password before hashing, so the same password with a different salt gives a completely different result. In BIP-39, the salt is the word <span class="mono">mnemonic</span> with your passphrase added on the end, so no passphrase means the salt is just <span class="mono">mnemonic</span>. PBKDF2 runs <strong>HMAC-SHA512</strong> 2,048 times in a chain, each round feeding the next, and combines all 2,048 results (it XORs them together) into one answer. The result is the 512-bit number below, the <strong>BIP-39 seed</strong>.</p>
         <p>That stretching is deliberate: it makes each guess 2,048 times slower for an attacker. But stretching is <strong>not</strong> randomness. It can't rescue weak or made-up bits. A patterned or guessable phrase is still found quickly, just a little more slowly. Your security comes from your 256 real dice or coin bits.</p>
       </div>
+      <div class="viz">
+        <h3>Inside PBKDF2, with your words</h3>
+        <div class="flowline" id="kdfIn"></div>
+        <table class="kdf" id="kdfTable"><tr><td class="muted">Working…</td></tr></table>
+        <p class="cap">Each round's output (U) is completely different from the one before. The seed is all 2,048 of them combined with XOR, so an attacker can't skip ahead: to test one guess, they have to run all 2,048 rounds too.</p>
+      </div>
       <p class="small" style="margin:12px 0 4px"><strong>Your BIP-39 seed</strong> (128 hex characters = 512 bits):</p>
       <div class="seed" id="seedOut"></div>
       <div class="status small" id="seedStatus"></div>
       <div class="seedtext small">
-        <p>Every private key, public key and address in your wallet comes from this one number. The wallet hashes it once more (HMAC-SHA512 with the key "Bitcoin seed", the BIP-32 standard) to make the master private key, and every address is built from that.</p>
+        <p>Every private key, public key and address in your wallet comes from this one number. The wallet hashes it once more (HMAC-SHA512 with the key "Bitcoin seed", the BIP-32 standard) to make the master private key, and every address is built from that. You'll do exactly that in Steps 6 and 7.</p>
         <p>Change a single word, or add a single letter of passphrase, and you get a completely different seed and a completely different wallet. Try it:</p>
       </div>
       <div class="row">
@@ -224,8 +331,110 @@
   </section>
 
   <section>
-    <h2><span class="step">Step 5</span>Hand it in</h2>
-    <p class="small">Download your work as an Excel file. It opens in Excel or Numbers. The file includes your bits, words and seed, so anyone you send it to can see this exercise wallet. That's fine for a practice wallet, and it's one more reason never to use it for real bitcoin.</p>
+    <h2><span class="step">Step 5</span>Break it: see the checksum catch a mistake</h2>
+    <div class="locked" id="brLocked">🔒 Locked. This step opens when your checksum and all 24 words are right.</div>
+    <div class="hidden" id="brBody">
+      <div class="why"><strong>What's happening:</strong> when you type words into a wallet to restore it, the wallet turns them back into 264 bits, splits off the last 8, runs SHA-256 on the first 256, and checks that the first 8 bits of the hash match. If you wrote one word down wrong, they almost certainly won't.</div>
+      <p class="small"><strong>Your job:</strong> pretend you made a mistake copying your words. Pick a word and swap in a different one, then watch the wallet's check.</p>
+      <div class="row">
+        <label class="small">Word number <select class="text" id="brPos"></select></label>
+        <label class="small">Replace it with <input class="text" id="brWord" list="brList" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="any BIP-39 word" style="min-width:180px"></label>
+        <datalist id="brList"></datalist>
+      </div>
+      <div class="viz" id="brViz"><p class="cap" style="margin:0">Pick a word number and type a replacement.</p></div>
+      <div class="row"><button id="brCount">How many of the 2,048 words would pass in this spot?</button></div>
+      <div id="brCountOut" class="small"></div>
+      <div id="brQs"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="step">Step 6</span>From seed to master key (BIP-32)</h2>
+    <div class="locked" id="mkLocked">🔒 Locked. This step opens once your seed is showing in Step 4.</div>
+    <div class="hidden" id="mkBody">
+      <div class="why"><strong>What's happening:</strong> one more hash. The wallet runs your seed through HMAC-SHA512 again, this time with the words <span class="mono">Bitcoin seed</span> as the key. The answer is 512 bits, shown below as 128 hex characters.
+        <p style="margin:8px 0 0">The wallet doesn't use those 512 bits as one number. It cuts them exactly in half:</p>
+        <ul style="margin:6px 0 0 20px;padding:0">
+          <li><strong>First half (256 bits) → master private key.</strong> The key at the very top of your wallet. Every other key comes from it.</li>
+          <li><strong>Second half (256 bits) → chain code.</strong> An extra secret. The wallet mixes it in every time it makes a key below this one (Step 7 shows why that matters).</li>
+        </ul></div>
+      <p class="small"><strong>Your job:</strong> here are your 128 characters, in 16 blocks of 8. Click the block where the <strong>second half starts</strong>.</p>
+      <div class="blocks" id="mkI"></div>
+      <p class="note">Hint: half of 128 characters is 64. How many blocks of 8 is that?</p>
+      <div class="status" id="mkStatus"></div>
+      <div class="hidden" id="mkReveal">
+        <div class="viz">
+          <h3>Packed into one string: the xprv</h3>
+          <p class="cap" style="margin-top:0">Wallets store and export an extended key as one Base58Check string. These are the pieces inside your master xprv:</p>
+          <table class="kdf" id="mkFields"></table>
+          <p class="small" style="margin:10px 0 4px">Your master extended private key:</p>
+          <div class="box" id="mkXprv"></div>
+          <p class="small" style="margin:10px 0 4px">Its public half, the master extended public key (public key = private key × G, the same elliptic curve math every Bitcoin key uses):</p>
+          <div class="box" id="mkXpub"></div>
+          <p class="cap"><strong>Why a chain code?</strong> Without it, every child key would be a hash of just a public key, which anyone can see, so anyone could work out your whole tree. The chain code is a 256-bit secret mixed into every step, so only someone holding it can derive your child keys.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="step">Step 7</span>Down the derivation path to your first address</h2>
+    <div class="locked" id="dpLocked">🔒 Locked. This step opens when you've split your master key in Step 6.</div>
+    <div class="hidden" id="dpBody">
+      <div class="why"><strong>What's happening:</strong> from the master key, the wallet derives a <strong>child</strong>: HMAC-SHA512 again, keyed with the parent's chain code. The left half of the result is added to the parent private key to make the child key; the right half is the child's chain code. Repeat that from child to child and you walk down a path. A wallet's address keys live five levels down, at a path like <span class="mono">m/84'/0'/0'/0/0</span>.</div>
+      <div class="scroll"><table class="kdf">
+        <tr><th>Level</th><th>In <span class="mono">m/84'/0'/0'/0/0</span></th><th>What it means</th></tr>
+        <tr><td>Purpose</td><td class="m">84'</td><td>Which standard, and so which address type: 44' legacy, 49' nested SegWit, 84' native SegWit, 86' Taproot</td></tr>
+        <tr><td>Coin type</td><td class="m">0'</td><td>0' is bitcoin, 1' is testnet</td></tr>
+        <tr><td>Account</td><td class="m">0'</td><td>Separate accounts from the same seed, like separate bank accounts</td></tr>
+        <tr><td>Change</td><td class="m">0</td><td>0 is for addresses you hand out to receive; 1 is for change back to yourself</td></tr>
+        <tr><td>Index</td><td class="m">0</td><td>Address number 0, 1, 2… Wallets look ahead about 20 unused addresses (the "gap limit") when restoring</td></tr>
+      </table></div>
+      <p class="small" style="margin-top:10px">The apostrophe means <strong>hardened</strong>. A hardened child uses an index from 2<sup>31</sup> (2,147,483,648) upward, so <span class="mono">84'</span> really means index 2<sup>31</sup> + 84, and its HMAC input includes the parent's <strong>private</strong> key. A normal child (no apostrophe) uses the parent's <strong>public</strong> key instead. That one difference decides who can derive what, as you'll see at the end.</p>
+      <p class="small"><strong>Your job, first:</strong> what index number does <span class="mono">84'</span> stand for?</p>
+      <div class="row"><input class="text short" id="dpIdx" inputmode="numeric" autocomplete="off" style="width:180px"><span class="status" id="dpIdxStatus" style="margin:0"></span></div>
+      <div class="hidden" id="dpMain">
+        <h3 style="margin:18px 0 4px">Build your path</h3>
+        <div class="row">
+          <label class="small">Purpose <select class="text" id="dpPurpose"><option value="84">84' native SegWit</option><option value="86">86' Taproot</option><option value="49">49' nested SegWit</option><option value="44">44' legacy</option></select></label>
+          <label class="small">Coin <select class="text" id="dpCoin"><option value="0">0' bitcoin</option><option value="1">1' testnet</option></select></label>
+          <label class="small">Account <input class="text short" id="dpAcct" inputmode="numeric" value="0" style="width:70px"></label>
+          <label class="small">Change <select class="text" id="dpChain"><option value="0">0 receive</option><option value="1">1 change</option></select></label>
+          <label class="small">Index <input class="text short" id="dpIndex" inputmode="numeric" value="0" style="width:70px"></label>
+        </div>
+        <div class="pathbig" id="dpPath"></div>
+        <div class="viz">
+          <h3>Each level, one HMAC-SHA512 at a time</h3>
+          <div class="scroll"><table class="kdf" id="dpTable"></table></div>
+          <p class="cap">Look at the "goes in" column: the three hardened levels put in <strong>00 + the parent private key</strong>; the last two put in the <strong>parent public key</strong>. Everything else is the same recipe at every level.</p>
+        </div>
+        <div class="viz">
+          <h3>Your address</h3>
+          <div id="dpResult"></div>
+          <p class="cap">Change the index to 1, 2, 3… for new receive addresses, or set Change to 1 for change addresses. All from the same 24 words. That's why one backup covers every address you'll ever use.</p>
+        </div>
+        <div class="viz">
+          <h3>Why the first three levels are hardened: the xpub leak</h3>
+          <p class="small" style="margin-top:0">Your account xpub (above) can be given to a watch-only wallet or an accounting tool: it can make all your addresses but can't spend. This demo asks a <em>what if</em>: suppose someone got that xpub <strong>and</strong> the private key for one address below it. Watch what they could do with nothing but public math.</p>
+          <div class="box" style="font:inherit;font-size:.9rem;word-break:normal;margin:8px 0">
+            <strong>Before you run it: this is not a crack in Bitcoin.</strong> Nothing here breaks SHA-256, HMAC or the elliptic curve. It's a known trade-off in how wallets derive keys, written into the BIP-32 standard itself, and wallets were designed around it from the start. The math is easy <em>only</em> if the attacker already holds two things at once:
+            <ol style="margin:6px 0 6px 20px;padding:0">
+              <li><strong>Your xpub.</strong> You only share it on purpose, with a tool you chose.</li>
+              <li><strong>A private key for one of your addresses.</strong> Normal wallets never show or export these. Hardware wallets can't export them at all: the key never leaves the device.</li>
+            </ol>
+            Without both, there's no shortcut. Guessing a private key means searching about 2<sup>128</sup> possibilities, far beyond every computer on Earth running for the age of the universe.
+          </div>
+          <div class="row"><button id="dpAttack">Run the attack</button></div>
+          <div id="dpLeak"></div>
+        </div>
+        <div id="dpQs"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="step">Step 8</span>Hand it in</h2>
+    <p class="small">Download your work as an Excel file. It opens in Excel or Numbers, and you can load it back into this page later with <strong>Load my work</strong> at the top. The file includes your bits, words and seed, so anyone you send it to can see this exercise wallet. That's fine for a practice wallet, and it's one more reason never to use it for real bitcoin.</p>
     <div class="row"><button class="primary" id="download">Download my work (Excel)</button><span class="note" id="dlNote"></span></div>
   </section>
 
@@ -473,6 +682,15 @@ function pbkdf2Sha512(password, salt, rounds) {   // 64-byte (512-bit) result
   for (let i = 1; i < rounds; i++) { U = mac(U); for (let j = 0; j < 64; j++) T[j] ^= U[j]; }
   return T;
 }
+function bip39SeedTrace(mnemonic, passphrase) {   // same math as bip39Seed, but keeps a few rounds to show
+  const enc = new TextEncoder();
+  const mac = hmacSha512(enc.encode(mnemonic.normalize("NFKD")));
+  const salt = enc.encode(("mnemonic" + passphrase).normalize("NFKD"));
+  const first = new Uint8Array(salt.length + 4); first.set(salt); first[salt.length + 3] = 1;
+  let U = mac(first); const T = U.slice(); const rows = [[1, toHex(U), toHex(T)]];
+  for (let i = 2; i <= 2048; i++) { U = mac(U); for (let j = 0; j < 64; j++) T[j] ^= U[j]; if (i <= 3 || i === 2048) rows.push([i, toHex(U), toHex(T)]); }
+  return { T, rows };
+}
 function bip39Seed(mnemonic, passphrase) {  // BIP-39: PBKDF2-HMAC-SHA512, 2048 rounds, salt = "mnemonic" + passphrase
   const enc = new TextEncoder();
   return pbkdf2Sha512(enc.encode(mnemonic.normalize("NFKD")), enc.encode(("mnemonic" + passphrase).normalize("NFKD")), 2048);
@@ -678,6 +896,8 @@ function update() {
   $("seedBody").classList.toggle("hidden", !unlocked);
   if (unlocked) requestSeed(words.join(" ")); else { seedKey = ""; seedHex = ""; clearTimeout(seedTimer); }
   window.__state = s; window.__words = words;
+  drawViz(s, words, nRight, unlocked);
+  scheduleSave();
 }
 
 /* ---------------- Step 4: work out the seed (off the main update, since 2048 rounds take a moment) ---------------- */
@@ -696,8 +916,11 @@ function requestSeed(mnemonic) {
       $("seedOut").textContent = "(not shown)";
       $("seedStatus").innerHTML = '<span class="bad">Seed self-test failed. Don\'t trust this page\'s seed.</span>'; return;
     }
-    seedHex = toHex(bip39Seed(mnemonic, pass));
+    const tr = bip39SeedTrace(mnemonic, pass);
+    seedHex = toHex(tr.T);
     $("seedOut").textContent = seedHex;
+    drawKdf(mnemonic, pass, tr.rows);
+    update();
     $("seedStatus").innerHTML = '<span class="ok">✓</span> <span class="muted">The seed math passed the official BIP-39 test case before showing you this.</span>' +
       (pass ? ' <span class="muted">This is the seed <strong>with</strong> your passphrase.</span>' : "");
   }, 30);
@@ -784,6 +1007,13 @@ function buildXlsx() {
     [B("Seed unlocked (Step 4)?"), seedHex ? "YES" : "NO"],
     [B("BIP-39 seed (512 bits, hex)"), seedHex || "(not unlocked)"],
     [B("Passphrase used for the seed?"), seedHex ? ($("pass").value ? "yes (the passphrase itself is not saved)" : "no") : ""],
+    [B("Step 5 questions right"), `${BRQ.filter((x, i) => brAns[i] === x.a).length} of ${BRQ.length}` + (Object.keys(brAns).length < BRQ.length ? ` (${BRQ.length - Object.keys(brAns).length} unanswered)` : "")],
+    [B("Step 6: found where the chain code starts?"), B32S.mkDone ? "YES" : "NO"],
+    [B("Step 7: index for 84' right?"), B32S.idxDone ? "YES" : "NO"],
+    [B("Step 7: path used"), B32S.addr ? B32S.path : "(not reached)"],
+    [B("Step 7: address"), B32S.addr || "(not reached)"],
+    [B("Step 7: ran the xpub leak attack?"), B32S.attacked ? "YES" : "NO"],
+    [B("Step 7 questions right"), `${DPQ.filter((x, i) => B32S.ans[i] === x.a).length} of ${DPQ.length}`],
     [], [B("24 words (as the student typed them)"), B("Right?")],
     ...ans.map((a, i) => [i + 1, a.wT || "(blank)", yn(a.done, a.wT, a.wOk)]),
     [], ["Learning exercise only. Not for self-custody of real bitcoin: this was made on a computer connected to the internet."],
@@ -810,9 +1040,10 @@ function buildXlsx() {
     const a = ans[r];
     sheet3.push([B(r + 1), ...row.map(b => b === "" ? null : +b), a.mT === "" ? null : +a.mT, yn(a.done, a.mT, a.mOk), a.wT || null, yn(a.done, a.wT, a.wOk), a.tries]);
   });
-  const names = ["Summary", "Sheet 1 - Bits", "Sheet 2 - Checksum", "Sheet 3 - Words"];
+  const names = ["Summary", "Sheet 1 - Bits", "Sheet 2 - Checksum", "Sheet 3 - Words", "Saved state"];
+  const saved = [[B("Don't edit this sheet. \"Load my work\" on the lab page reads it to restore your progress. Your passphrase is not included.")], [MARK + JSON.stringify(getState())]];
   const sheets = [sheetXml(summary, [34, 40, 10]), sheetXml(sheet1, [7, ...Array(11).fill(6), 16]),
-                  sheetXml(sheet2, [28, 100]), sheetXml(sheet3, [7, ...Array(11).fill(6), 12, 10, 16, 12, 12])];
+                  sheetXml(sheet2, [28, 100]), sheetXml(sheet3, [7, ...Array(11).fill(6), 12, 10, 16, 12, 12]), sheetXml(saved, [120])];
   const files = [
     { name: "[Content_Types].xml", text: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' +
         names.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("") + "</Types>" },
@@ -840,6 +1071,485 @@ $("download").addEventListener("click", () => {
                           : (!s.complete ? "Downloaded, but you haven't finished all 256 bits yet." : (!s.correct ? "Downloaded, but your checksum isn't right yet." : "Downloaded. Hand this file in."));
 });
 
+
+/* ---------------- BIP-32: elliptic curve, RIPEMD-160, address encodings (plain JavaScript, offline) ---------------- */
+const unhex = h => { const o = new Uint8Array(h.length / 2); for (let i = 0; i < o.length; i++) o[i] = parseInt(h.substr(i * 2, 2), 16); return o; };
+const cat = (...a) => { const o = new Uint8Array(a.reduce((n, x) => n + x.length, 0)); let p = 0; for (const x of a) { o.set(x, p); p += x.length; } return o; };
+const u8 = (...b) => new Uint8Array(b);
+const ser32 = i => { const o = new Uint8Array(4); new DataView(o.buffer).setUint32(0, i >>> 0); return o; };
+function ripemd160(msg) {
+  const zl=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,7,4,13,1,10,6,15,3,12,0,9,5,2,14,11,8,3,10,14,4,9,15,8,1,2,7,0,6,13,11,5,12,1,9,11,10,0,8,12,4,13,3,7,15,14,5,6,2,4,0,5,9,7,12,2,10,14,1,3,8,11,6,15,13];
+  const zr=[5,14,7,0,9,2,11,4,13,6,15,8,1,10,3,12,6,11,3,7,0,13,5,10,14,15,8,12,4,9,1,2,15,5,1,3,7,14,6,9,11,8,12,2,10,0,4,13,8,6,4,1,3,11,15,0,5,12,2,13,9,7,10,14,12,15,10,4,1,5,8,7,6,2,13,14,0,3,9,11];
+  const sl=[11,14,15,12,5,8,7,9,11,13,14,15,6,7,9,8,7,6,8,13,11,9,7,15,7,12,15,9,11,7,13,12,11,13,6,7,14,9,13,15,14,8,13,6,5,12,7,5,11,12,14,15,14,15,9,8,9,14,5,6,8,6,5,12,9,15,5,11,6,8,13,12,5,12,13,14,11,8,5,6];
+  const sr=[8,9,9,11,13,15,15,5,7,7,8,11,14,14,12,6,9,13,15,7,12,8,9,11,7,7,12,7,6,15,13,11,9,7,15,11,8,6,6,14,12,13,5,14,13,13,7,5,15,5,8,11,14,14,6,14,6,9,12,9,12,5,15,8,8,5,12,9,12,5,14,6,8,13,6,5,15,13,11,11];
+  const hl=[0x00000000,0x5a827999,0x6ed9eba1,0x8f1bbcdc,0xa953fd4e], hr=[0x50a28be6,0x5c4dd124,0x6d703ef3,0x7a6d76e9,0x00000000];
+  const rotl=(x,n)=>(x<<n)|(x>>>(32-n));
+  const f=(j,x,y,z)=>j<16?(x^y^z):j<32?((x&y)|(~x&z)):j<48?((x|~y)^z):j<64?((x&z)|(y&~z)):(x^(y|~z));
+  const l=msg.length, bl=((l+9+63)>>6)<<6, m=new Uint8Array(bl); m.set(msg); m[l]=0x80;
+  const dv=new DataView(m.buffer), bits=l*8; dv.setUint32(bl-8,bits>>>0,true); dv.setUint32(bl-4,Math.floor(bits/4294967296),true);
+  let h0=0x67452301,h1=0xefcdab89,h2=0x98badcfe,h3=0x10325476,h4=0xc3d2e1f0; const X=new Array(16);
+  for (let o=0;o<bl;o+=64) {
+    for (let i=0;i<16;i++) X[i]=dv.getUint32(o+i*4,true);
+    let al=h0,bL=h1,cl=h2,dl=h3,el=h4,ar=h0,br=h1,cr=h2,dr=h3,er=h4;
+    for (let j=0;j<80;j++) { const q=j>>4;
+      let t=(rotl((al+f(j,bL,cl,dl)+X[zl[j]]+hl[q])|0,sl[j])+el)|0; al=el; el=dl; dl=rotl(cl,10); cl=bL; bL=t;
+      t=(rotl((ar+f(79-j,br,cr,dr)+X[zr[j]]+hr[q])|0,sr[j])+er)|0; ar=er; er=dr; dr=rotl(cr,10); cr=br; br=t; }
+    const t=(h1+cl+dr)|0; h1=(h2+dl+er)|0; h2=(h3+el+ar)|0; h3=(h4+al+br)|0; h4=(h0+bL+cr)|0; h0=t; }
+  const out=new Uint8Array(20), ov=new DataView(out.buffer); [h0,h1,h2,h3,h4].forEach((v,i)=>ov.setUint32(i*4,v>>>0,true)); return out;
+}
+const hash160 = b => ripemd160(sha256(b));
+const sha256d = b => sha256(sha256(b));
+// secp256k1
+const EC = { p: 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2Fn, n: 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141n,
+  G: [0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798n, 0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8n] };
+const modp = (a, m = EC.p) => { const r = a % m; return r >= 0n ? r : r + m; };
+function modinv(a, m = EC.p) { let [lo, hi] = [1n, 0n], [low, high] = [modp(a, m), m]; while (low > 1n) { const r = high / low; [lo, hi] = [hi - lo * r, lo]; [low, high] = [high - low * r, low]; } return modp(lo, m); }
+function ecAdd(P, Q) {
+  if (!P) return Q; if (!Q) return P;
+  if (P[0] === Q[0]) { if (modp(P[1] + Q[1]) === 0n) return null; const l = modp(3n * P[0] * P[0] * modinv(2n * P[1])); const x = modp(l * l - 2n * P[0]); return [x, modp(l * (P[0] - x) - P[1])]; }
+  const l = modp((Q[1] - P[1]) * modinv(Q[0] - P[0])); const x = modp(l * l - P[0] - Q[0]); return [x, modp(l * (P[0] - x) - P[1])];
+}
+function ecMul(k, P = EC.G) { let R = null, A = P; while (k > 0n) { if (k & 1n) R = ecAdd(R, A); A = ecAdd(A, A); k >>= 1n; } return R; }
+const big2b = (x, len = 32) => unhex(x.toString(16).padStart(len * 2, "0"));
+const b2big = b => BigInt("0x" + (toHex(b) || "0"));
+const pubOf = kBig => { const P = ecMul(kBig); return cat(u8(P[1] & 1n ? 3 : 2), big2b(P[0])); };
+function liftEven(pub) { const x = b2big(pub.slice(1)); let y = 0n; // only used on keys we made, so y is known: recompute from x
+  const y2 = modp(x * x * x + 7n); y = (function powm(b, e) { let r = 1n; b = modp(b); while (e > 0n) { if (e & 1n) r = modp(r * b); b = modp(b * b); e >>= 1n; } return r; })(y2, (EC.p + 1n) / 4n);
+  if (y & 1n) y = EC.p - y; return [x, y]; }
+// Base58Check
+const B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+function b58(b) { let x = b2big(b), s = ""; while (x > 0n) { s = B58[Number(x % 58n)] + s; x /= 58n; } for (const v of b) { if (v) break; s = "1" + s; } return s; }
+const b58check = payload => b58(cat(payload, sha256d(payload).slice(0, 4)));
+// Bech32 / Bech32m
+const B32 = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
+function polymod(v) { const G = [0x3b6a57b2,0x26508e6d,0x1ea119fa,0x3d4233dd,0x2a1462b3]; let c = 1; for (const x of v) { const b = c >>> 25; c = ((c & 0x1ffffff) << 5) ^ x; for (let i = 0; i < 5; i++) if ((b >>> i) & 1) c ^= G[i]; } return c >>> 0; }
+function to5(data) { let acc = 0, bits = 0; const out = []; for (const v of data) { acc = (acc << 8) | v; bits += 8; while (bits >= 5) { bits -= 5; out.push((acc >> bits) & 31); } } if (bits) out.push((acc << (5 - bits)) & 31); return out; }
+function segwitAddr(hrp, ver, prog) {
+  const data = [ver, ...to5(prog)], C = ver === 0 ? 1 : 0x2bc830a3, hx = [...[...hrp].map(c => c.charCodeAt(0) >> 5), 0, ...[...hrp].map(c => c.charCodeAt(0) & 31)];
+  const pm = polymod([...hx, ...data, 0, 0, 0, 0, 0, 0]) ^ C;
+  return hrp + "1" + [...data, ...[0,1,2,3,4,5].map(i => (pm >>> (5 * (5 - i))) & 31)].map(d => B32[d]).join("");
+}
+const taggedHash = (tag, msg) => { const t = sha256(new TextEncoder().encode(tag)); return sha256(cat(t, t, msg)); };
+function taprootOutputKey(pub) {     // BIP-341/86: Q = P + hash_TapTweak(P)·G, with P taken with an even y
+  const P = liftEven(pub), t = b2big(taggedHash("TapTweak", big2b(P[0]))) % EC.n;
+  return big2b(ecAdd(P, ecMul(t))[0]);
+}
+// BIP-32
+const HARD = 0x80000000;
+function master(seedBytes) { const I = hmacSha512(new TextEncoder().encode("Bitcoin seed"))(seedBytes); return { I, k: I.slice(0, 32), c: I.slice(32) }; }
+function ckd(k, c, i) {   // child private key derivation; returns the HMAC input too, so it can be shown
+  const kBig = b2big(k), pub = pubOf(kBig), hard = i >= HARD;
+  const data = hard ? cat(u8(0), k, ser32(i)) : cat(pub, ser32(i));
+  const I = hmacSha512(c)(data), IL = b2big(I.slice(0, 32));
+  const child = (IL + kBig) % EC.n;
+  if (IL >= EC.n || child === 0n) throw new Error("This index gives an invalid key (odds about 1 in 2^127). Use the next index.");
+  return { k: big2b(child), c: I.slice(32), data, hard, parentPub: pub, IL: I.slice(0, 32) };
+}
+const VERS = { xprv: "0488ade4", xpub: "0488b21e", tprv: "04358394", tpub: "043587cf", zpub: "04b24746", vpub: "045f1cf6" };
+function serialize(ver, depth, fpr, index, c, keyData) { return b58check(cat(unhex(VERS[ver]), u8(depth), fpr, ser32(index), c, keyData)); }
+const PURPOSES = {
+  44: { name: "Legacy (P2PKH)", starts: "1 (m or n on testnet)", addr: (pub, test) => b58check(cat(u8(test ? 0x6f : 0x00), hash160(pub))) },
+  49: { name: "Nested SegWit (P2SH-P2WPKH)", starts: "3 (2 on testnet)", addr: (pub, test) => b58check(cat(u8(test ? 0xc4 : 0x05), hash160(cat(u8(0, 20), hash160(pub))))) },
+  84: { name: "Native SegWit (P2WPKH)", starts: "bc1q (tb1q on testnet)", addr: (pub, test) => segwitAddr(test ? "tb" : "bc", 0, hash160(pub)) },
+  86: { name: "Taproot (P2TR)", starts: "bc1p (tb1p on testnet)", addr: (pub, test) => segwitAddr(test ? "tb" : "bc", 1, taprootOutputKey(pub)) },
+};
+function derivePath(seedBytes, purpose, coin, account, chain, index) {
+  const m = master(seedBytes), levels = [];
+  let k = m.k, c = m.c;
+  const steps = [[purpose + HARD, purpose + "'"], [coin + HARD, coin + "'"], [account + HARD, account + "'"], [chain, String(chain)], [index, String(index)]];
+  let accountKey = null;
+  for (const [i, label] of steps) {
+    const r = ckd(k, c, i);
+    levels.push({ i, label, ...r, parentK: k, parentC: c });
+    k = r.k; c = r.c;
+    if (levels.length === 3) accountKey = { k, c, depth: 3, i, fpr: hash160(r.parentPub).slice(0, 4) };
+  }
+  const pub = pubOf(b2big(k));
+  return { m, levels, k, c, pub, accountKey };
+}
+// self-test: official vectors (BIP-32 test vector 1; BIP-44/49/84/86 vectors for "abandon ×11 about")
+let B32_OK = null;
+function bip32SelfTest() {
+  if (B32_OK !== null) return B32_OK;
+  const res = { all: true, purposes: {} };
+  try {
+    const tv = master(unhex("000102030405060708090a0b0c0d0e0f"));
+    const okMaster = toHex(tv.k) === "e8f32e723decf4051aefac8e2c93c9c5b214313817cdb01a1494b917c8436b35" && toHex(tv.c) === "873dff81c02f525623fd1fe5167eac3a55a049de3d314bb42ee227ffed37d508";
+    const okRip = toHex(ripemd160(new TextEncoder().encode("abc"))) === "8eb208f7e05d987a9b044a8e98c6b087f15a0bfc";
+    const seed = unhex("5eb00bbddcf069084889a8ab9155568165f5c453ccb85e70811aaed6f6da5fc19a5ac40b389cd370d086206dec8aa6c43daea6690f20ad3d8d48b2d2ce9e38e4");
+    const want = { 44: "1LqBGSKuX5yYUonjxT5qGfpUsXKYYWeabA", 49: "37VucYSaXLCAsxYyAPfbSi9eh4iEcbShgf", 84: "bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu", 86: "bc1p5cyxnuxmeuwuvkwfem96lqzszd02n6xdcjrs20cac6yqjjwudpxqkedrcr" };
+    for (const p of [44, 49, 84, 86]) { const d = derivePath(seed, p, 0, 0, 0, 0); res.purposes[p] = PURPOSES[p].addr(d.pub, false) === want[p]; }
+    res.all = okMaster && okRip && Object.values(res.purposes).every(Boolean);
+  } catch (e) { res.all = false; }
+  B32_OK = res; return res;
+}
+
+/* ---------------- Steps 6 and 7: master key, path, address ---------------- */
+const B32S = { seedHex: "", m: null, mkDone: false, idxDone: false, addr: "", path: "", ans: {}, cacheKey: "", d: null, attacked: false };
+function decompress(pub) { const x = b2big(pub.slice(1)); const y2 = modp(x * x * x + 7n);
+  let y = (function powm(b, e) { let r = 1n; b = modp(b); while (e > 0n) { if (e & 1n) r = modp(r * b); b = modp(b * b); e >>= 1n; } return r; })(y2, (EC.p + 1n) / 4n);
+  if ((y & 1n) !== BigInt(pub[0] & 1)) y = EC.p - y; return [x, y]; }
+const encPub = P => cat(u8(P[1] & 1n ? 3 : 2), big2b(P[0]));
+const sh = (b, n = 16) => short(toHex(b), n);
+function refreshBip32() {
+  const ready = !!seedHex;
+  $("mkLocked").classList.toggle("hidden", ready); $("mkBody").classList.toggle("hidden", !ready);
+  if (!ready) { $("dpLocked").classList.remove("hidden"); $("dpBody").classList.add("hidden"); B32S.addr = ""; B32S.mkDone = false; B32S.idxDone = false; return; }
+  const st = bip32SelfTest();
+  if (!st.all) { $("mkStatus").innerHTML = '<span class="bad">BIP-32 self-test failed. Don\'t trust Steps 6 and 7 on this page.</span>'; return; }
+  if (B32S.seedHex !== seedHex) { B32S.seedHex = seedHex; B32S.m = master(unhex(seedHex)); B32S.cacheKey = ""; }
+  const m = B32S.m, I = toHex(m.I), kh = toHex(m.k), ch = toHex(m.c);
+  const pick = B32S.mkPick;
+  B32S.mkDone = pick === 9;
+  $("mkI").innerHTML = Array.from({ length: 16 }, (_, b) => {
+    const n = b + 1, cls = B32S.mkDone ? (n <= 8 ? "L" : "R") : (pick === n ? "miss" : "");
+    return `<button data-b="${n}" class="${cls}" ${B32S.mkDone ? "disabled" : ""}>${I.slice(b * 8, b * 8 + 8)}<span>block ${n}</span></button>`;
+  }).join("");
+  $("mkI").querySelectorAll("button").forEach(btn => btn.addEventListener("click", () => { B32S.mkPick = +btn.dataset.b; update(); }));
+  $("mkStatus").innerHTML = B32S.mkDone
+    ? '<span class="ok">✓ Right. Blocks 1–8 (blue) are your master private key. Blocks 9–16 (orange) are your chain code.</span>'
+    : !pick ? "" : pick < 9 ? `<span class="bad">✗ Block ${pick} is still in the first half. The first half is 64 characters, so it fills 8 blocks.</span>`
+    : `<span class="bad">✗ Block ${pick} is too far. The second half starts right after the first 64 characters.</span>`;
+  $("mkReveal").classList.toggle("hidden", !B32S.mkDone);
+  if (B32S.mkDone) {
+    const pub = pubOf(b2big(m.k));
+    $("mkFields").innerHTML = "<tr><th>Bytes</th><th>Field</th><th>Your value</th></tr>" + [
+      ["4", "Version (0488ade4 = mainnet private, shows as xprv)", "0488ade4"], ["1", "Depth (0 = master)", "00"], ["4", "Parent fingerprint (none for master)", "00000000"],
+      ["4", "Child number (none for master)", "00000000"], ["32", "Chain code", ch], ["33", "00 + private key", "00" + kh], ["4", "Checksum (first 4 bytes of double SHA-256)", "added by Base58Check"]
+    ].map(x => `<tr><td>${x[0]}</td><td>${x[1]}</td><td class="m">${x[2]}</td></tr>`).join("");
+    $("mkXprv").textContent = serialize("xprv", 0, new Uint8Array(4), 0, m.c, cat(u8(0), m.k));
+    $("mkXpub").textContent = serialize("xpub", 0, new Uint8Array(4), 0, m.c, pub);
+  }
+  $("dpLocked").classList.toggle("hidden", B32S.mkDone); $("dpBody").classList.toggle("hidden", !B32S.mkDone);
+  if (B32S.mkDone) drawPath(); else B32S.addr = "";
+}
+function intIn(id, max) { const v = $(id).value.replace(/\D/g, ""); $(id).value = v; const n = v === "" ? 0 : Math.min(+v, max); return n; }
+function drawPath() {
+  const ti = $("dpIdx").value.replace(/\D/g, ""); $("dpIdx").value = ti;
+  B32S.idxDone = ti === String(HARD + 84);
+  $("dpIdxStatus").innerHTML = !ti ? '<span class="muted">Hint: 2,147,483,648 + 84</span>' : B32S.idxDone ? '<span class="ok">✓ 2,147,483,732 (hex 0x80000054). Every hardened index has its top bit set.</span>' : '<span class="bad">✗ Not quite. Add 84 to 2,147,483,648.</span>';
+  $("dpMain").classList.toggle("hidden", !B32S.idxDone);
+  if (!B32S.idxDone) { B32S.addr = ""; return; }
+  const purpose = +$("dpPurpose").value, coin = +$("dpCoin").value, acct = intIn("dpAcct", 1000), chain = +$("dpChain").value, idx = intIn("dpIndex", 100000);
+  const key = [B32S.seedHex, purpose, coin, acct, chain, idx].join("/");
+  B32S.path = `m/${purpose}'/${coin}'/${acct}'/${chain}/${idx}`;
+  $("dpPath").innerHTML = `m / <span class="h">${purpose}'</span> / <span class="h">${coin}'</span> / <span class="h">${acct}'</span> / <span class="n">${chain}</span> / <span class="n">${idx}</span>`;
+  if (key !== B32S.cacheKey) {
+    try { B32S.d = derivePath(unhex(B32S.seedHex), purpose, coin, acct, chain, idx); B32S.cacheKey = key; B32S.attacked = false; $("dpLeak").innerHTML = ""; if (B32S.pendingAttack) { B32S.pendingAttack = false; setTimeout(runAttack, 0); } }
+    catch (e) { $("dpTable").innerHTML = `<tr><td class="bad">${esc(e.message)}</td></tr>`; return; }
+  }
+  const d = B32S.d, names = ["Purpose", "Coin type", "Account", "Change", "Index"], test = coin === 1;
+  $("dpTable").innerHTML = "<tr><th>Level</th><th>Index number</th><th>What goes into HMAC-SHA512<br>(keyed with the parent chain code)</th><th>Child private key</th><th>Child chain code</th></tr>" +
+    `<tr><td>m (master)</td><td>–</td><td class="muted">from Step 6</td><td class="m">${sh(d.m.k)}</td><td class="m">${sh(d.m.c)}</td></tr>` +
+    d.levels.map((L, n) => `<tr><td>${names[n]} <span class="mono">${L.label}</span></td><td class="m">${L.i.toLocaleString()}<br><span class="muted">0x${L.i.toString(16).padStart(8, "0")}</span></td>` +
+      `<td class="m">${L.hard ? "<strong>00 + parent private key</strong> + index<br>" : "<strong>parent public key</strong> + index<br>"}<span class="muted">${short(toHex(L.data), 26)}</span></td><td class="m">${sh(L.k)}</td><td class="m">${sh(L.c)}</td></tr>`).join("");
+  const P = PURPOSES[purpose]; B32S.addr = P.addr(d.pub, test);
+  const a = d.accountKey, apub = pubOf(b2big(a.k));
+  const xpub = serialize(test ? "tpub" : "xpub", 3, a.fpr, a.i, a.c, apub);
+  const zpub = purpose === 84 ? serialize(test ? "vpub" : "zpub", 3, a.fpr, a.i, a.c, apub) : "";
+  $("dpResult").innerHTML = `<table class="kdf">
+    <tr><td>Private key at <span class="mono">${B32S.path}</span></td><td class="m">${toHex(d.k)}</td></tr>
+    <tr><td>Public key (compressed)</td><td class="m">${toHex(d.pub)}</td></tr>
+    ${purpose === 86 ? `<tr><td>Taproot output key (public key tweaked by its own hash, BIP-341)</td><td class="m">${toHex(taprootOutputKey(d.pub))}</td></tr>` : `<tr><td>HASH160 (RIPEMD-160 of SHA-256)</td><td class="m">${toHex(hash160(d.pub))}</td></tr>`}
+    <tr><td>Address type</td><td>${P.name}, starts with ${P.starts}</td></tr></table>
+    <p class="small" style="margin:10px 0 4px">Your address:</p><div class="addr">${B32S.addr}</div>
+    <p class="small" style="margin:12px 0 4px">Account extended public key at <span class="mono">m/${purpose}'/${coin}'/${acct}'</span>, what a watch-only wallet imports:</p>
+    <div class="box">${xpub}</div>${zpub ? `<p class="note" style="margin:4px 0;word-break:break-all">Many wallets show the same key with different version bytes for native SegWit: <span class="mono">${zpub}</span></p>` : ""}
+    <p class="note">Check it: paste your 24 words into Ian Coleman's BIP39 tool, choose the BIP${purpose} tab, and the first address should match.</p>`;
+}
+function runAttack() {
+  const d = B32S.d; if (!d) return;
+  const chainIdx = d.levels[3].i, addrIdx = d.levels[4].i, a = d.accountKey;
+  const Ka = pubOf(b2big(a.k)), ca = a.c, kAddr = b2big(d.k);
+  // public derivation account -> chain node (anyone with the xpub can do this)
+  const I1 = hmacSha512(ca)(cat(Ka, ser32(chainIdx))), IL1 = b2big(I1.slice(0, 32)), cCh = I1.slice(32);
+  const Kch = encPub(ecAdd(ecMul(IL1), decompress(Ka)));
+  const I2 = hmacSha512(cCh)(cat(Kch, ser32(addrIdx))), IL2 = b2big(I2.slice(0, 32));
+  const kCh = modp(kAddr - IL2, EC.n), kAcct = modp(kCh - IL1, EC.n);
+  const real = b2big(a.k), ok = kAcct === real;
+  $("dpLeak").innerHTML = `<table class="kdf">
+    <tr><th>Attacker's step</th><th>Result</th></tr>
+    <tr><td>1. From the xpub alone: HMAC(account chain code, account public key + ${chainIdx}) → the number added at the change level</td><td class="m">${short(toHex(I1.slice(0, 32)), 24)}</td></tr>
+    <tr><td>2. Same again one level down, using the public key and chain code from step 1 → the number added at the index level</td><td class="m">${short(toHex(I2.slice(0, 32)), 24)}</td></tr>
+    <tr><td>3. Leaked address private key − step 2 number = change-level private key</td><td class="m">${short(kCh.toString(16).padStart(64, "0"), 24)}</td></tr>
+    <tr><td>4. That − step 1 number = <strong>account private key</strong></td><td class="m">${short(kAcct.toString(16).padStart(64, "0"), 24)}</td></tr>
+    <tr><td>Your real account private key</td><td class="m">${short(real.toString(16).padStart(64, "0"), 24)}</td></tr></table>
+    <p class="${ok ? "bad" : "ok"}">${ok ? "✗ They match. In this what-if, holding one address key plus the xpub gives the account private key, which could spend from every address in this account." : "Unexpected: no match."}</p>
+    <p class="small"><strong>Where it stops:</strong> the attacker can't climb above the account. The account level is hardened, so its HMAC input was 00 + the coin-type <em>private</em> key, which the attacker never had. Undoing it would mean reversing HMAC-SHA512. That's why the first three levels are hardened: a leak stays inside one account, and your master key and other accounts stay safe.</p>
+    <div class="box" style="font:inherit;font-size:.9rem;word-break:normal;margin-top:10px">
+      <strong>How realistic is this?</strong>
+      <table class="kdf" style="margin:6px 0">
+        <tr><td>The math, once both pieces are in hand</td><td>Trivial: two subtractions, done in milliseconds. That's why it's worth teaching.</td></tr>
+        <tr><td>Getting both pieces</td><td>The hard part, and rare in practice. It needs a mistake (like exporting a single key from an HD wallet to paste into another app or a paper wallet, or buggy wallet software) <em>plus</em> the xpub reaching the same person.</td></tr>
+        <tr><td>With a hardware wallet</td><td>Effectively impossible: private keys never leave the device.</td></tr>
+        <tr><td>Bitcoin as a whole</td><td>Unaffected. This targets one careless wallet, not the network. Other people's coins are untouched, and no block or rule changes.</td></tr>
+      </table>
+      <strong>The takeaways are simple habits:</strong> don't export individual private keys from an HD wallet, and treat your xpub as private. Even when no key leaks, an xpub reveals every address and your full balance to whoever holds it.
+    </div>`;
+  B32S.attacked = true;
+}
+const DPQ = [
+  { q: "For a hardened child, what goes into HMAC-SHA512 along with the index?", o: ["The parent public key", "00 followed by the parent private key", "The seed"], a: 1 },
+  { q: "A watch-only wallet holding only your account xpub can…", o: ["Spend from every address", "Make all your receive and change addresses and see your balance, but not spend", "Make addresses for every account on your seed"], a: 1 },
+  { q: "Why are the purpose, coin and account levels hardened?", o: ["Hardened keys make shorter addresses", "So a leaked xpub plus one child private key can't reach the master key or other accounts", "Hardened keys are required for Taproot"], a: 1 },
+  { q: "You restore your 24 words in a new wallet and see no balance. The coins were on m/84'/0'/0'/0/0. What's the likely cause?", o: ["The checksum failed", "The new wallet is looking on a different path, such as m/44'/0'/0' or m/86'/0'/0'", "The chain code expired"], a: 1 },
+];
+function drawDpQs() {
+  if (!$("dpQs")) return;
+  $("dpQs").innerHTML = "<h3 style='margin:14px 0 0'>Check yourself</h3>" + DPQ.map((x, i) => `<div class="q"><strong>${i + 1}. ${x.q}</strong>` +
+    x.o.map((o, k) => `<button data-q="${i}" data-k="${k}" class="${B32S.ans[i] === undefined ? "" : k === x.a ? "right" : k === B32S.ans[i] ? "wrong" : ""}" ${B32S.ans[i] !== undefined ? "disabled" : ""}>${o}</button>`).join("") + "</div>").join("");
+  $("dpQs").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { B32S.ans[b.dataset.q] = +b.dataset.k; drawDpQs(); }));
+}
+
+/* ---------------- live diagrams ---------------- */
+const short = (h, n = 16) => h.length > n ? h.slice(0, n) + "…" : h;
+function cells(bitstr, cls) { return [...bitstr].map(b => b === "" ? "<i></i>" : `<i class="${cls}${b}"></i>`).join(""); }
+function drawViz(s, words, nRight, unlocked) {
+  refreshBip32();
+  // big picture
+  const stages = [
+    { l: "1. Randomness", v: s.complete ? "256 bits" : `${s.filled} / 256 bits`, d: s.complete },
+    { l: "2. SHA-256 checksum", v: s.correct ? `first 8 bits = ${s.cs8}` : "?", d: s.correct },
+    { l: "3. 264 bits → 24 × 11", v: s.correct ? "24 numbers, 0–2047" : "?", d: s.correct },
+    { l: "4. Numbers → words", v: `${nRight} / 24 words`, d: nRight === 24 && s.correct },
+    { l: "5. PBKDF2 × 2,048", v: seedHex ? short(seedHex, 18) : "512-bit seed", d: !!seedHex },
+    { l: "6. BIP-32 master key", v: B32S.mkDone ? short(toHex(B32S.m.k), 18) : "master key + chain code", d: B32S.mkDone },
+    { l: "7. Path → address", v: B32S.addr ? short(B32S.addr, 22) : "your first address", d: !!B32S.addr }];
+  const cur = stages.findIndex(x => !x.d && !x.off);
+  $("pipe").innerHTML = stages.map((x, i) => `<div class="stage ${x.off ? "off" : x.d ? "done" : i === cur ? "now" : ""}"><div class="lbl">${x.l}</div><div class="val">${esc(x.v)}</div></div>`).join('<span class="arrow">→</span>');
+  // step 1 bar
+  $("bar1").innerHTML = cells(s.bits, "b");
+  const ones = s.bits.filter(b => b === "1").length, zeros = s.bits.filter(b => b === "0").length;
+  let run = 0, longest = 0, prev = "";
+  for (const b of s.bits) { if (b === "") { run = 0; prev = ""; continue; } run = b === prev ? run + 1 : 1; prev = b; if (run > longest) longest = run; }
+  $("bar1cap").textContent = !s.filled ? "Each square fills in as you enter a bit." :
+    `${ones} ones and ${zeros} zeros so far. Longest run of the same bit: ${longest}. ` +
+    (s.complete ? `For 256 truly random bits, a split anywhere from about 112–144 ones is normal, and the longest run is usually somewhere from 6 to 11. Real randomness looks clumpy, not neat. A count far outside that range, or a regular pattern like 0101…, is a sign the bits weren't random. These checks can catch bad randomness, but no check can prove bits are random: that depends on how you made them.`
+                : "Real randomness lands near half and half, with uneven runs and clumps.");
+  // step 2
+  if (!s.complete) { $("ckFlow").innerHTML = '<span class="muted">Finish Step 1 to see this.</span>'; $("bar2").innerHTML = ""; $("bar2cap").textContent = ""; }
+  else {
+    const h = toHex(sha256(bitsToBytes(s.str)));
+    $("ckFlow").innerHTML = `<span class="chip">your 256 bits</span><span class="arrow">→ SHA-256 →</span>` +
+      (s.correct ? `<span class="chip"><span class="chip hl" style="padding:0 3px">${h.slice(0, 2)}</span>${h.slice(2, 20)}…</span><span class="arrow">→ keep the first 2 characters →</span><span class="chip hl">${s.cs8}</span><span class="arrow">→ stick on the end</span>`
+                 : `<span class="chip">64 hex characters</span><span class="arrow">→ first 2 characters →</span><span class="chip hl">? ? ? ? ? ? ? ?</span>`);
+    $("bar2").innerHTML = cells(s.bits, "b") + (s.correct ? cells(s.cs8.split(""), "c") : '<i class="cq"></i>'.repeat(8));
+    $("bar2cap").textContent = s.correct ? "256 + 8 = 264 bits. Flip any one of your blue bits and the hash changes completely, so the orange bits change too." : "The 8 dashed squares are what you're working out.";
+  }
+  // step 3 segments
+  $("segs").innerHTML = s.rows.map((row, r) => {
+    const right = !!words[r];
+    const bits = row.map((b, c) => b === "" ? "<i></i>" : `<i class="${r === 23 && c >= 3 ? "c" : "b"}${b}"></i>`).join("");
+    const M = right ? PLACE.reduce((a, p, c) => a + (row[c] === "1" ? p : 0), 0) : null;
+    return `<div class="seg${right ? " right" : ""}"><div class="h">Word ${r + 1}${r === 23 ? " (3 yours + 8 checksum)" : ""}</div><div class="bits">${bits}</div><div class="w">${right ? `${M} → ${words[r]}` : '<span class="muted">? → ?</span>'}</div></div>`;
+  }).join("");
+  // step 5 lock
+  $("brLocked").classList.toggle("hidden", unlocked);
+  $("brBody").classList.toggle("hidden", !unlocked);
+  if (unlocked) { brPhrase = words.slice(); if (!brReady) setupBreak(); drawBreak(); }
+}
+function drawKdf(mnemonic, pass, rows) {
+  $("kdfIn").innerHTML = `<span class="chip">password = your 24 words as text</span><span class="arrow">+</span><span class="chip">salt = "mnemonic${esc(pass)}"</span><span class="arrow">→ HMAC-SHA512, 2,048 times →</span><span class="chip">512-bit seed</span>`;
+  $("kdfTable").innerHTML = "<tr><th>Round</th><th>This round's output U</th><th>Running XOR of all rounds so far</th></tr>" +
+    rows.map(([i, u, t], k) => (k === 3 ? '<tr><td colspan="3" class="muted">… 2,044 more rounds …</td></tr>' : "") +
+      `<tr><td>${i.toLocaleString()}</td><td class="m">${short(u, 24)}</td><td class="m">${i === 2048 ? "<strong>" + short(t, 24) + "</strong> = your seed" : short(t, 24)}</td></tr>`).join("");
+}
+
+/* ---------------- Step 5: break it ---------------- */
+let brPhrase = [], brReady = false; const brAns = {};
+function phraseBits(ws) { return ws.map(w => WORDS.indexOf(w).toString(2).padStart(11, "0")).join(""); }
+function checkBits(all) { const ent = all.slice(0, 256), cs = all.slice(256), calc = sha256(bitsToBytes(ent))[0].toString(2).padStart(8, "0"); return { cs, calc, ok: cs === calc }; }
+function setupBreak() {
+  brReady = true;
+  $("brPos").innerHTML = Array.from({ length: 24 }, (_, i) => `<option value="${i}">${i + 1}</option>`).join("");
+  $("brList").innerHTML = WORDS.map(w => `<option value="${w}">`).join("");
+  $("brPos").addEventListener("change", () => { $("brCountOut").innerHTML = ""; drawBreak(); });
+  $("brWord").addEventListener("input", drawBreak);
+  $("brCount").addEventListener("click", () => {
+    const pos = +$("brPos").value, pass = [];
+    for (const w of WORDS) { if (w === brPhrase[pos]) continue; const t = brPhrase.slice(); t[pos] = w; if (checkBits(phraseBits(t)).ok) pass.push(w); }
+    $("brCountOut").innerHTML = `<p><strong>${pass.length} of the other 2,047 words</strong> would still pass the checksum in spot ${pos + 1}${pass.length ? ": " + pass.join(", ") : ""}.</p>` +
+      `<p class="muted">${pos === 23 ? "In the last spot it's always exactly 7 others (8 valid words in total, counting yours): the last word holds 3 free bits, and 2³ = 8. The other 8 bits are fixed by the checksum." : "In other spots it's random, about 8 on average: 2,048 words ÷ 256 possible checksums. Try a few spots, then try spot 24."}</p>`;
+  });
+  drawQs();
+}
+function drawBreak() {
+  if (!brReady) return;
+  const pos = +$("brPos").value, w = $("brWord").value.trim().toLowerCase();
+  const orig = brPhrase[pos];
+  if (!w) { $("brViz").innerHTML = `<p class="cap" style="margin:0">Word ${pos + 1} is <strong>${orig}</strong>. Type a different word to replace it.</p>`; return; }
+  if (!WORDS.includes(w)) { $("brViz").innerHTML = `<p class="bad" style="margin:0">"${esc(w)}" isn't in the BIP-39 word list. A wallet would reject it before even checking the checksum.</p>`; return; }
+  if (w === orig) { $("brViz").innerHTML = `<p class="cap" style="margin:0">That's the word you already have. Pick a different one.</p>`; return; }
+  const t = brPhrase.slice(); t[pos] = w;
+  const a = phraseBits(brPhrase), b = phraseBits(t), c = checkBits(b);
+  const ob = a.slice(pos * 11, pos * 11 + 11), nb = b.slice(pos * 11, pos * 11 + 11);
+  const diff = [...ob].map((x, i) => x !== nb[i] ? `<strong style="color:var(--bad)">${nb[i]}</strong>` : nb[i]).join("");
+  $("brViz").innerHTML = `<h3>The wallet's check</h3>
+    <div class="flowline"><span class="chip">${orig} = ${ob}</span><span class="arrow">→ you wrote →</span><span class="chip">${w} = ${diff}</span></div>
+    <div class="flowline"><span class="chip">first 256 bits</span><span class="arrow">→ SHA-256 → first 8 bits →</span><span class="chip hl">${c.calc}</span><span class="arrow">compared with the last 8 bits of the phrase</span><span class="chip hl">${c.cs}</span></div>
+    <p class="${c.ok ? "ok" : "bad"}" style="margin:6px 0 0">${c.ok ? "✓ They match. This wrong phrase passes. A wallet would accept it and open a different, empty wallet. This is the rare case the checksum misses (about 1 in 256)." : "✗ They don't match. The wallet says the phrase is invalid. Notice it can't tell you which word is wrong, only that something is."}</p>`;
+}
+const BRQ = [
+  { q: "Your phrase fails the checksum. Can the wallet tell which word you got wrong?", o: ["Yes, it highlights the wrong word", "No. It only knows the 264 bits don't add up, not where the mistake is", "Only if it's the last word"], a: 1 },
+  { q: "About how often does a random one-word mistake slip past an 8-bit checksum?", o: ["Never", "About 1 time in 256", "About 1 time in 2"], a: 1 },
+  { q: "Given your first 23 words, why are exactly 8 last words valid?", o: ["The word list has 8 sections", "The last word has 3 free bits, so 2³ = 8 choices, and each one fixes its own 8 checksum bits", "Wallets only allow 8 endings"], a: 1 },
+];
+function drawQs() {
+  $("brQs").innerHTML = "<h3 style='margin:14px 0 0'>Check yourself</h3>" + BRQ.map((x, i) => `<div class="q"><strong>${i + 1}. ${x.q}</strong>` +
+    x.o.map((o, k) => `<button data-q="${i}" data-k="${k}" class="${brAns[i] === undefined ? "" : k === x.a ? "right" : k === brAns[i] ? "wrong" : ""}" ${brAns[i] !== undefined ? "disabled" : ""}>${o}</button>`).join("") + "</div>").join("");
+  $("brQs").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { brAns[b.dataset.q] = +b.dataset.k; drawQs(); }));
+}
+
+
+/* ---------------- save and load ---------------- */
+const SAVE_KEY = "seedPhraseLab.v1", MARK = "SEEDLAB_STATE:";
+let restoring = false, saveTimer = null, skipUnloadWarn = false;
+function getState() {
+  const v = id => $(id).value;
+  return { v: 1, saved: new Date().toISOString(),
+    title: { name: v("name"), dept: v("dept"), univ: v("univ"), course: v("course"), instructor: v("instructor"), duedate: v("duedate") },
+    bits: entropyInputs.map(i => i.value || "_").join(""), hex: v("hex"),
+    m: ansM.map(x => x.value), w: ansW.map(x => x.value), tries: [...tries], lwM: [...lastWrongM], lwW: [...lastWrongW],
+    hashShown, brAns: { ...brAns },
+    s6: { pick: B32S.mkPick || 0 },
+    s7: { idx: v("dpIdx"), purpose: v("dpPurpose"), coin: v("dpCoin"), acct: v("dpAcct"), chain: v("dpChain"), index: v("dpIndex") },
+    dpAns: { ...B32S.ans }, attacked: B32S.attacked };
+}
+function applyState(o) {
+  if (!o || o.v !== 1 || typeof o.bits !== "string" || o.bits.length !== 256) throw new Error("bad state");
+  restoring = true;
+  const set = (id, val) => { if (val !== undefined && !$(id).readOnly) $(id).value = val; };
+  const t = o.title || {}; ["name", "dept", "univ", "course", "instructor", "duedate"].forEach(k => set(k, t[k]));
+  [...o.bits].forEach((b, i) => entropyInputs[i].value = b === "_" ? "" : b);
+  set("hex", o.hex);
+  (o.m || []).forEach((x, i) => { if (ansM[i]) ansM[i].value = x; });
+  (o.w || []).forEach((x, i) => { if (ansW[i]) ansW[i].value = x; });
+  (o.tries || []).forEach((x, i) => tries[i] = +x || 0);
+  (o.lwM || []).forEach((x, i) => lastWrongM[i] = x); (o.lwW || []).forEach((x, i) => lastWrongW[i] = x);
+  hashShown = !!o.hashShown;
+  Object.keys(brAns).forEach(k => delete brAns[k]); Object.assign(brAns, o.brAns || {});
+  B32S.mkPick = +((o.s6 || {}).pick) || 0;
+  const s7 = o.s7 || {}; ["idx", "purpose", "coin", "acct", "chain", "index"].forEach((k, i) => set(["dpIdx", "dpPurpose", "dpCoin", "dpAcct", "dpChain", "dpIndex"][i], s7[k]));
+  B32S.ans = { ...(o.dpAns || {}) }; B32S.pendingAttack = !!o.attacked;
+  restoring = false;
+  if (brReady) drawQs();
+  drawDpQs(); update();
+}
+function scheduleSave() {
+  if (restoring) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { try { localStorage.setItem(SAVE_KEY, JSON.stringify(getState())); } catch (e) {} }, 300);
+}
+// read our own .xlsx back, including one Excel or Numbers has re-saved (compressed, shared strings)
+async function unzip(buf) {
+  const dv = new DataView(buf), u = new Uint8Array(buf), out = {};
+  let e = -1; for (let i = buf.byteLength - 22; i >= Math.max(0, buf.byteLength - 66000); i--) if (dv.getUint32(i, true) === 0x06054b50) { e = i; break; }
+  if (e < 0) throw new Error("not a zip");
+  const count = dv.getUint16(e + 10, true); let p = dv.getUint32(e + 16, true);
+  for (let n = 0; n < count; n++) {
+    if (dv.getUint32(p, true) !== 0x02014b50) throw new Error("bad zip");
+    const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true), nlen = dv.getUint16(p + 28, true), xlen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true), off = dv.getUint32(p + 42, true);
+    const name = new TextDecoder().decode(u.subarray(p + 46, p + 46 + nlen));
+    const start = off + 30 + dv.getUint16(off + 26, true) + dv.getUint16(off + 28, true), data = u.subarray(start, start + csize);
+    if (/\.xml$/.test(name)) {
+      if (method === 0) out[name] = new TextDecoder().decode(data);
+      else if (method === 8) { const ds = new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw")); out[name] = await new Response(ds).text(); }
+    }
+    p += 46 + nlen + xlen + clen;
+  }
+  return out;
+}
+const unxml = t => t.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&#(\d+);/g, (_, d) => String.fromCharCode(+d)).replace(/&amp;/g, "&");
+async function loadFile(file) {
+  const files = await unzip(await file.arrayBuffer());
+  const texts = Object.keys(files).filter(n => /worksheets\/|sharedStrings/.test(n)).map(n => files[n]);
+  for (const t of texts) {
+    const i = t.indexOf(MARK); if (i < 0) continue;
+    // the state may be split across several <t> runs if a spreadsheet app re-saved it
+    const rest = t.slice(i + MARK.length), end = rest.search(/<\/(si|is|c)>/);
+    const json = unxml((end < 0 ? rest : rest.slice(0, end)).replace(/<[^>]+>/g, ""));
+    return JSON.parse(json);
+  }
+  return legacyState(files);   // older files from before "Saved state" existed: rebuild from the regular sheets
+}
+// read every cell of a sheet into { "B2": value }, handling inline strings, shared strings and numbers
+function readCells(xml, shared) {
+  const cells = {};
+  for (const m of xml.matchAll(/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) {
+    const attrs = m[1], body = m[2] || "", ref = (attrs.match(/\br="([A-Z]+\d+)"/) || [])[1]; if (!ref) continue;
+    const t = (attrs.match(/\bt="(\w+)"/) || [])[1], v = (body.match(/<v>([\s\S]*?)<\/v>/) || [])[1];
+    let val;
+    if (t === "s") val = shared[+v];
+    else if (t === "inlineStr") val = unxml([...body.matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(x => x[1]).join(""));
+    else if (t === "str") val = v === undefined ? "" : unxml(v);
+    else val = v;
+    if (val !== undefined) cells[ref] = String(val);
+  }
+  return cells;
+}
+function legacyState(files) {
+  const shared = files["xl/sharedStrings.xml"] ? [...files["xl/sharedStrings.xml"].matchAll(/<si>([\s\S]*?)<\/si>/g)].map(m => unxml([...m[1].matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(x => x[1]).join(""))) : [];
+  // find each sheet by what's in it, so renamed or re-saved files still work
+  const sheets = Object.keys(files).filter(n => /worksheets\/sheet\d+\.xml$/.test(n)).map(n => readCells(files[n], shared));
+  const has = (c, text) => Object.values(c).some(v => v === text);
+  const wS = sheets.find(c => has(c, "Student's M")), ckS = sheets.find(c => has(c, "First two characters typed"));
+  const sumS = sheets.find(c => has(c, "Student") && has(c, "Checksum typed"));
+  const bitsS = sheets.find(c => c !== wS && has(c, "Row digits"));
+  if (!bitsS) throw new Error("not a lab file");
+  const COLS = "BCDEFGHIJKL";
+  let bits = "";
+  for (let r = 0; r < 24; r++) for (let c = 0; c < (r < 23 ? 11 : 3); c++) { const v = bitsS[COLS[c] + (r + 2)]; bits += v === "0" || v === "1" ? v : "_"; }
+  const o = { v: 1, saved: new Date().toISOString(), title: {}, bits, hex: "", m: [], w: [], tries: [], lwM: [], lwW: [], hashShown: false, brAns: {}, s6: {}, s7: {}, dpAns: {}, attacked: false };
+  const label = (cells, text) => { for (const ref in cells) if (/^A\d+$/.test(ref) && cells[ref] === text) return cells["B" + ref.slice(1)]; return undefined; };
+  if (ckS) { const h = label(ckS, "First two characters typed"); if (h && h !== "(none)") o.hex = h; }
+  if (wS) for (let r = 0; r < 24; r++) {
+    const m = wS["M" + (r + 2)], w = wS["O" + (r + 2)], t = wS["Q" + (r + 2)];
+    o.m.push(m === undefined ? "" : String(m)); o.w.push(w === undefined || w === "(blank)" ? "" : w); o.tries.push(+t || 0);
+  }
+  if (sumS) {
+    const map = { Student: "name", Department: "dept", University: "univ", Course: "course", Instructor: "instructor", Date: "duedate" };
+    for (const k in map) { const v = label(sumS, k); if (v !== undefined && v !== "(no name entered)") o.title[map[k]] = v; }
+    o.hashShown = (label(sumS, "Built-in hash button (Way B) used?") || "").startsWith("Yes");
+  }
+  o.legacy = true;
+  return o;
+}
+function pasteWork(text) {
+  const words = (text.toLowerCase().match(/[a-z]+/g) || []).filter(w => WORDS.includes(w));
+  const bitRun = (text.replace(/[^01]/g, "").length >= 256 && /^[\s01,;|-]*$/.test(text)) ? text.replace(/[^01]/g, "").slice(0, 256) : "";
+  if (words.length === 24) {
+    const all = words.map(w => WORDS.indexOf(w).toString(2).padStart(11, "0")).join("");
+    const ok = sha256(bitsToBytes(all.slice(0, 256)))[0].toString(2).padStart(8, "0") === all.slice(256);
+    if (!ok) return '<span class="bad">Those 24 words don\'t pass the checksum, so one of them is probably mistyped or out of order. Check them against your Excel file.</span>';
+    [...all.slice(0, 256)].forEach((b, i) => entropyInputs[i].value = b);
+    $("hex").value = parseInt(all.slice(256), 2).toString(16).padStart(2, "0");
+    words.forEach((w, i) => { ansM[i].value = String(WORDS.indexOf(w)); ansW[i].value = w; });
+    update(); return '<span class="ok">✓ Filled in.</span> Your bits, checksum and all 24 words are back, and your seed is in Step 4. Pick up from Step 5.';
+  }
+  if (bitRun.length === 256) {
+    [...bitRun].forEach((b, i) => entropyInputs[i].value = b); update();
+    return '<span class="ok">✓ Your 256 bits are in Step 1.</span> Carry on from Step 2.';
+  }
+  if (words.length) return `<span class="bad">Found ${words.length} BIP-39 word${words.length === 1 ? "" : "s"}. Paste all 24, in order.</span>`;
+  return '<span class="bad">Paste either your 24 words or your 256 bits (0s and 1s).</span>';
+}
+$("pasteBtn").addEventListener("click", () => { $("pasteNote").innerHTML = WORDS ? pasteWork($("pasteBox").value) : '<span class="bad">The word list didn\'t load.</span>'; });
+$("topSave").addEventListener("click", () => $("download").click());
+$("topLoad").addEventListener("click", () => $("loadFile").click());
+$("loadFile").addEventListener("change", async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try { const st = await loadFile(f); applyState(st); scheduleSave();
+    $("saveNote").innerHTML = st.legacy ? '<span class="ok">Loaded</span> from an older lab file. Your bits, checksum and words are back. Older files didn\'t record Steps 5 to 7, so pick those up from where they are now. (Re-type your passphrase in Step 4 if you used one.)'
+                                       : '<span class="ok">Loaded.</span> You\'re back where you left off. (Re-type your passphrase in Step 4 if you used one.)'; }
+  catch (err) { $("saveNote").innerHTML = '<span class="bad">That file couldn\'t be loaded. Pick an Excel file downloaded from this page.</span>'; }
+  e.target.value = "";
+});
+$("clearSaved").addEventListener("click", () => {
+  if (!confirm("Erase everything on this page and start again? Download your Excel file first if you want to keep it.")) return;
+  try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+  skipUnloadWarn = true; location.reload();
+});
+
 /* ---------------- copy + start ---------------- */
 $("copyCmd").addEventListener("click", async () => {
   const text = $("command").textContent;
@@ -849,7 +1559,11 @@ $("copyCmd").addEventListener("click", async () => {
 });
 $("hex").addEventListener("input", e => { e.target.value = e.target.value.replace(/\s/g, "").toLowerCase(); update(); });
 $("pass").addEventListener("input", update);
-window.addEventListener("beforeunload", e => { if (entropyInputs.some(i => i.value)) { e.preventDefault(); e.returnValue = ""; } });
+window.addEventListener("beforeunload", e => {
+  if (skipUnloadWarn) return;
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(getState())); return; } catch (err) {}
+  if (entropyInputs.some(i => i.value)) { e.preventDefault(); e.returnValue = ""; }
+});
 
 let hashShown = false;
 $("showHash").addEventListener("click", () => {
@@ -866,9 +1580,12 @@ function setupTitlePage() {
   }
   $("duedate").value = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
 }
-setupTitlePage(); buildBitGrid(); buildWordGrid(); loadWords(); buildWordList(); update();
+["dpIdx", "dpAcct", "dpIndex"].forEach(id => $(id).addEventListener("input", update));
+["dpPurpose", "dpCoin", "dpChain"].forEach(id => $(id).addEventListener("change", update));
+$("dpAttack").addEventListener("click", runAttack);
+setupTitlePage(); buildBitGrid(); buildWordGrid(); loadWords(); buildWordList(); drawDpQs(); update();
+try { const saved = JSON.parse(localStorage.getItem(SAVE_KEY) || "null"); if (saved) { applyState(saved); $("saveNote").textContent = "Restored your saved work from " + new Date(saved.saved).toLocaleString() + "."; } } catch (e) {}
 window.__buildXlsx = buildXlsx;   // used by tests
 </script>
 </body>
 </html>
-
